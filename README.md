@@ -51,4 +51,12 @@ Review refreshed content before publication. Bespoke homepage passages in `src/A
 
 ## Before Replacing the Live Site
 
-This is a local design implementation, not a production deployment. Keep the current booking service available. Configure SPA route fallback on the chosen host and complete a production SEO migration review: server rendering or prerendering, canonical URLs, sitemap, structured data, redirects and consent requirements. Dynamic features from the original site's scripts, such as its booking backend, are not recreated by importing page content.
+This is a local design implementation, not a production deployment. Keep the current booking service available. Complete a production SEO migration review: server rendering or prerendering, canonical URLs, sitemap, structured data, redirects and consent requirements. Dynamic features from the original site's scripts, such as its booking backend, are not recreated by importing page content.
+
+### Vercel
+
+Set the Vercel project Root Directory to the directory containing this package.json and vercel.json. The checked-in configuration uses the Vite framework, runs `npm run build`, and publishes `dist`. Use a Vite-compatible Node version, such as Node 22.12+ or Node 24.
+
+The routing configuration serves existing static files first, then falls back to index.html for React page URLs. This enables direct visits and refreshes on routes such as `/team`, `/gallery` and `/blog/0-percent-finance-dental-implants-monthly-cost` while preserving `/content/*.json`, images and compiled assets.
+
+Redeploy after publishing configuration changes; an existing deployment does not pick them up automatically. Confirm that direct page URLs and their refreshes work, and that `/content/team.json` returns JSON rather than HTML. Other hosting platforms need an equivalent SPA fallback.
