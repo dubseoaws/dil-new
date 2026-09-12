@@ -1,18 +1,29 @@
 import { useEffect, useRef, useState } from 'react'
-import { ArrowRight, ArrowUpRight, Check, ChevronDown, ChevronLeft, ChevronRight, Clock3, MapPin, Menu, Phone, Plus, Play, ShieldCheck, Star, X, MoveHorizontal, Mail, CalendarDays, HeartHandshake, ScanLine, BadgeCheck } from 'lucide-react'
+import { ArrowRight, ArrowUpRight, Check, ChevronDown, ChevronRight, MapPin, Menu, Phone, Play, ShieldCheck, X, MoveHorizontal, Mail, CalendarDays, HeartHandshake, ScanLine, BadgeCheck } from 'lucide-react'
 import home from './data/home.json'
-import assetMap from './data/assets.json'
 import pageIndex from './data/page-index.json'
 import './App.css'
 import { InnerPage } from './InnerPage'
+import { ClinicLocations } from './ClinicLocations'
+import { BookingPage } from './BookingPage'
+import { assets, imageFor } from './data/site'
+import { FaqSection, GoogleReviews, PageSections, SectionHeading, SmileGallery, TeamSection } from './PageSections'
 
 const live = 'https://www.dental-implants-london.co.uk'
-const booking = `${live}/booking`
+const booking = '/booking'
 const finance = 'https://lead.tabeo.co.uk/south-kensington-medical-and-dental/finance'
-const assets: Record<string, string> = assetMap
-const imageFor = (text: string) => {
-  const image = home.images.find(image => image.alt.includes(text))
-  return image ? { ...image, src: assets[image.src] || image.src } : { src: '/images/hero.jpg', alt: text }
+function localBookingHtml(html: string) {
+  const document = new DOMParser().parseFromString(html, 'text/html')
+  document.querySelectorAll('a[href]').forEach(link => {
+    try {
+      const url = new URL(link.getAttribute('href')!, window.location.origin)
+      if ([window.location.host, 'www.dental-implants-london.co.uk', 'dental-implants-london.co.uk'].includes(url.host) && /^\/booking(?:\/|$)/.test(url.pathname)) {
+        link.setAttribute('href', `/booking${url.search}${url.hash}`)
+        link.removeAttribute('target')
+      }
+    } catch { return }
+  })
+  return document.body.innerHTML
 }
 const treatments = [
   { title: 'Single Tooth Implant', path: '/single-tooth-implant', text: "Our most popular treatment for replacing one missing tooth. A titanium implant is surgically placed into your jawbone, where it fuses naturally over 3-6 months. We then attach a custom-made zirconia crown that matches your existing teeth perfectly. Unlike bridges, single implants don't require grinding down healthy adjacent teeth, preserving your natural tooth structure. Prices start from £2,950 including implant, abutment, and crown." },
@@ -20,28 +31,11 @@ const treatments = [
   { title: 'Implant-Retained Dentures', path: '/implant-retained-dentures', text: "Transform your existing loose dentures into a secure, stable solution. We place 2-4 implants per arch that 'snap' onto your denture using special attachments. This prevents embarrassing slipping during eating or speaking, eliminates the need for messy denture adhesives, and significantly improves chewing efficiency. Your dentures remain removable for easy cleaning while providing the confidence of a fixed solution." },
   { title: 'Bone Grafting & Sinus Lifts', path: '/bone-graft-for-dental-implants', text: "Don't let bone loss stop you from getting dental implants. Our experienced dentists perform advanced bone grafting procedures to rebuild lost jawbone, creating a solid foundation for implants. Sinus lift surgery is available for upper jaw implants where the sinus cavity has expanded. Using the latest regenerative techniques and biocompatible materials, we can often make implants possible even in complex cases other clinics have turned away." },
 ]
-const dentists = [
-  ['Dr. Sam Parsno', 'Implant Dentist', '72207'],
-  ['Dr. Yasha Y Shirazi', 'Principal Dentist and Clinical Director', '195843'],
-  ['Dr Kamran Yazdi', 'Dentist', '197926'],
-  ['Dr. Andreia Phipps', 'Dentist', '229601'],
-  ['Dr. Reza Davari', 'Dentist', '302422'],
-  ['Dr. Narges Ameri', 'Dentist', '325081'],
-  ['Jack Button', 'Dental Hygienist', '244367'],
-  ['Laila Alhussein', 'Dental Hygienist', '328882'],
-]
 const steps = [
   ['Initial Consultation', 'Your journey starts with a consultation, including CT scans and X-rays, to check your eligibility and devise a personalised treatment plan for you.'],
   ['Implant Placement', 'A titanium implant is placed surgically into the jawbone, functioning as a secure tooth root. Recovery takes 3-6 months with a temporary denture provided.'],
   ['Abutment Attachment', 'After healing, an abutment is placed onto the implant, offering the stable foundation required for your final crown.'],
   ['Crown Placement', 'A custom made crown is then fitted on your teeth, restoring the full function and natural aesthetics of your smile.'],
-]
-const faqs = [
-  ['What Are Dental Implants?', 'A dental implant is a titanium screw placed directly into the jawbone. Over time, it fuses with the bone and functions as an artificial tooth root to support crowns, bridges, or dentures.'],
-  ['Why are Dental Implants Needed?', 'They provide a long-term solution for missing teeth, helping to prevent bone loss, restore chewing function, and improve aesthetics compared to traditional dentures.'],
-  ['Are dental Implants safe?', 'Yes, dental implants are a well-established, proven treatment. We use biocompatible titanium implants that integrate safely with your body.'],
-  ['Are dental implants painful?', "The procedure is performed under local anesthesia, so you shouldn't feel pain during surgery. Post-operative discomfort is usually manageable with over-the-counter medication."],
-  ['How long do dental implants last?', 'With proper care and oral hygiene, dental implants are designed for long-term use. Studies show success rates of over 95% at 10 years. Individual results depend on oral health, lifestyle, and maintenance.'],
 ]
 
 function Brand() {
@@ -50,10 +44,6 @@ function Brand() {
 
 function Button({ children, href = booking, light = false }: { children: React.ReactNode; href?: string; light?: boolean }) {
   return <a className={`button ${light ? 'button-light' : ''}`} href={href}>{children}<ArrowUpRight size={17} /></a>
-}
-
-function SectionHeading({ eyebrow, title, children }: { eyebrow: string; title: string; children?: React.ReactNode }) {
-  return <div className="section-heading"><div><span className="eyebrow"><span />{eyebrow}</span><h2>{title}</h2></div>{children}</div>
 }
 
 function Header() {
@@ -80,7 +70,7 @@ function SourceSection({ title }: { title: string }) {
   if (!section) return null
   if (title === 'Dental Implants Cost in London') return <section className="section cost-section"><div className="container"><SectionHeading eyebrow="Affordable pricing" title={title}><a href="/dental-implants-cost" className="text-link">Complete dental implants cost guide<ArrowUpRight size={17} /></a></SectionHeading><p className="cost-intro">The cost of dental implants in London typically ranges around £3,000 to £4,000 for a single implant with crown and abutment. At our South Kensington clinic, we believe in accessible excellence. By focusing on efficiency and expertise, we offer premium implants including Zirconia crowns starting from £2,950*.</p><div className="cost-table-wrap"><table className="cost-table"><thead><tr><th scope="col">Treatment / Service</th><th scope="col">Dental Implants London<small>Our Price</small></th><th scope="col">Other London Clinics<small>Standard Price</small></th></tr></thead><tbody>{[['Single Implant + Crown', 'From £2,950*', 'From £3,000'], ['Full Arch (All-on-4)', 'From £12,995', 'From £15,000'], ['Implant Quality', 'Premium', 'Varies (Often Standard)'], ['Consultation', 'Free Initial Assessment', 'from £150']].map(([label, price, other]) => <tr key={label}><th scope="row">{label}</th><td><Check size={15} />{price}</td><td>{other}</td></tr>)}</tbody></table></div><p className="cost-note">*All-inclusive implant price covering the implant, abutment and zirconia crown. 0% finance available over 12 months, subject to status.</p><p className="cost-note">Want to know more? See our <a href="/dental-implants-cost">complete dental implants cost guide</a> with finance options and what's included.</p><div className="cost-actions"><Button>Book consultation</Button><a className="text-link" href="tel:02071833573">Call 020 71833573<Phone size={15} /></a></div></div></section>
   const style = title.startsWith('What') ? 'understanding' : title.startsWith('Who') ? 'candidacy' : title.includes('Longevity') ? 'longevity' : 'quality'
-  return <section className={`source-band source-${style}`}><div className="container source-copy" dangerouslySetInnerHTML={{ __html: section.html || '' }} /></section>
+  return <section className={`source-band source-${style}`}><div className="container source-copy" dangerouslySetInnerHTML={{ __html: localBookingHtml(section.html || '') }} /></section>
 }
 
 const heroVideos = [
@@ -115,8 +105,6 @@ function HeroVideos() {
 
 function HomePage() {
   const [selectedTreatment, setSelectedTreatment] = useState(0)
-  const [selectedClinic, setSelectedClinic] = useState(0)
-  const teamTrack = useRef<HTMLDivElement>(null)
   const treatment = treatments[selectedTreatment]
   return <main id="main">
     <section className="hero hero-with-videos"><div className="container hero-inner"><div className="hero-content"><div className="hero-introduction"><span className="eyebrow"><span />Established implant clinic in London</span><h1>Dental Implants<br /><em>London.</em></h1><a className="hero-reviews" href="https://share.google/FEhlEzh1JDaOMlqB0"><span className="google-g">G</span><span><span className="stars">★★★★★</span><span className="review-score"><b>4.9/5</b> from 247 Google Reviews</span></span><ArrowUpRight size={15} /></a></div><div className="hero-booking"><p className="hero-description">Trusted dental implants London clinic with highly experienced dentists. Get natural-looking, long-lasting dental implants with premium quality at affordable prices.</p><div className="hero-price"><span>From <strong>£2,950</strong></span><span className="price-divider" /><span>Or from <strong className="monthly">£67.80<small>/mo*</small></strong></span></div><div className="hero-buttons"><Button>Free 15-min chat</Button><a className="text-link" href={booking}>1-hour consultation · £80<ArrowUpRight size={16} /></a></div></div></div><HeroVideos /></div></section>
@@ -140,15 +128,15 @@ function HomePage() {
     <SourceSection title="Dental Implant Longevity" />
     <SourceSection title="Quality Dental Implants" />
 
-    <section className="section team-section" id="team"><div className="container"><SectionHeading eyebrow="Our team" title="London's Experienced Implant Dentists"><div className="team-controls"><button className="icon-button" title="Previous dentists" aria-label="Previous dentists" onClick={() => teamTrack.current?.scrollBy({ left: -620, behavior: 'smooth' })}><ChevronLeft size={20} /></button><button className="icon-button" title="Next dentists" aria-label="Next dentists" onClick={() => teamTrack.current?.scrollBy({ left: 620, behavior: 'smooth' })}><ChevronRight size={20} /></button></div></SectionHeading><p className="section-intro">Our dentists with a special interest in dental implants are highly qualified professionals with years of experience in implant dentistry.</p><div className="team-track" ref={teamTrack}>{dentists.map(([name, role, gdc]) => <a className="dentist" href="/team" key={name}><div className="dentist-photo"><img {...imageFor(name)} loading="lazy" /><span><ArrowUpRight size={22} /></span></div><div className="dentist-info"><h3>{name}</h3><span>{role}</span><small>GDC: {gdc}</small></div></a>)}</div><a href="/team" className="text-link team-link">Read full bios<ArrowUpRight size={17} /></a></div></section>
+    <TeamSection />
 
-    <section className="review-section"><div className="container review-layout"><div><span className="eyebrow"><span />Patient reviews</span><h2>What Our London<br /><em>Patients Say</em></h2><div className="review-rating"><span className="google-g">G</span><strong>4.9<span>/5</span></strong><span><span className="stars">★★★★★</span><small>247 Google Reviews</small></span></div></div><div><Star className="review-star" size={27} fill="currentColor" /><blockquote>“By far, the best dental procedure I have received. Will definitely continue using their services. Clean place, welcoming reception staff. Doctor is nice and strightforward as well as clear and concise. Could not ask more. Keep up the good job”</blockquote><div className="review-author"><span className="avatar">CR</span><b>Carlos Rosa</b><BadgeCheck size={17} /></div><a className="text-link" href="https://share.google/FEhlEzh1JDaOMlqB0">View more patient reviews<ArrowUpRight size={17} /></a><small className="review-disclaimer">These are genuine reviews from our patients. Individual treatment outcomes may vary.</small></div></div></section>
+    <GoogleReviews />
 
-    <section className="section gallery-strip"><div className="container"><SectionHeading eyebrow="Before & after gallery" title="Dental Implants London Results"><a href="/gallery" className="text-link">View full gallery<ArrowUpRight size={17} /></a></SectionHeading><div className="gallery-grid">{home.images.filter(image => image.alt.startsWith('Dental implants London')).map(image => <a href="/gallery" key={image.src}><img src={assets[image.src] || image.src} alt={image.alt} loading="lazy" /><ArrowUpRight size={19} /></a>)}</div><small>Individual results may vary. Photographs shown with patient consent.</small></div></section>
+    <SmileGallery />
 
-    <section className="section clinics-section" id="clinics"><div className="container"><SectionHeading eyebrow="Visit our clinics" title="Dental Implants Across London"><p>With two London clinics — South Kensington and the City of London — we welcome patients from across the capital. Looking for dental implants near me in London? One of our clinics is close by, each with excellent transport links.</p></SectionHeading><div className="clinic-layout"><div className="clinic-photo"><img src={selectedClinic === 0 ? '/images/kensington.jpg' : '/images/city.jpg'} alt={selectedClinic === 0 ? 'Exterior of the South Kensington clinic' : "Shop front of St Paul's Medical & Dental Clinic"} loading="lazy" /></div><div className="clinic-info"><div className="clinic-tabs" role="tablist" aria-label="Clinic locations">{['South Kensington', 'City of London'].map((label, index) => <button id={`clinic-tab-${index}`} key={label} role="tab" aria-selected={selectedClinic === index} aria-controls="clinic-panel" onClick={() => setSelectedClinic(index)}>{label}</button>)}</div><div role="tabpanel" id="clinic-panel" aria-labelledby={`clinic-tab-${selectedClinic}`}><span className="eyebrow">{selectedClinic === 0 ? 'South Kensington · 7 days' : "City of London · St Paul's"}</span><h3>{selectedClinic === 0 ? 'South Kensington Clinic' : 'City of London Clinic'}</h3><p>{selectedClinic === 0 ? 'In the heart of South Kensington, just a two-minute walk from South Kensington Underground Station — an elegant period property on Old Brompton Road, in front of the Lamborghini showroom.' : "In the heart of the Square Mile at Ave Maria Lane — moments from St Paul's Cathedral and Paternoster Square, ideal for City workers and residents."}</p><div className="clinic-address"><MapPin size={19} /><span>{selectedClinic === 0 ? '20 Old Brompton Road, South Kensington, London SW7 3DL' : '5 Ave Maria Lane, London EC4M 7AQ'}</span></div><div className="clinic-address"><Clock3 size={19} /><span>{selectedClinic === 0 ? 'Monday 9 AM to 6 PM · Tuesday 9 AM to 8 PM · Wednesday 9 AM to 6 PM · Thursday 9 AM to 8 PM · Friday 8 AM to 5 PM · Saturday & Sunday 10 AM to 4 PM' : 'Monday to Thursday 8:00am–6:00pm, Friday 8:00am–2:00pm'}</span></div><div className="clinic-actions"><Button href={selectedClinic === 0 ? '/south-kensington' : '/city-of-london'}>Visit our clinics</Button><a className="text-link" href={selectedClinic === 0 ? 'https://maps.google.com/?q=20+Old+Brompton+Road,+South+Kensington,+London+SW7+3DL' : 'https://www.google.com/maps?q=5+Ave+Maria+Lane,+London+EC4M+7AQ'}>Get directions<ArrowUpRight size={17} /></a></div></div></div></div><a href="/areas-we-serve" className="text-link areas-link">View all areas we serve<ArrowUpRight size={17} /></a></div></section>
+    <section className="section clinics-section" id="clinics"><div className="container"><SectionHeading eyebrow="Two London Locations" title="Our Clinic Locations"><p>With two London clinics — South Kensington and the City of London — we welcome patients from across the capital. Looking for dental implants near me in London? One of our clinics is close by, each with excellent transport links.</p></SectionHeading><ClinicLocations /><a href="/areas-we-serve" className="text-link areas-link">View all areas we serve<ArrowUpRight size={17} /></a></div></section>
 
-    <section className="section faq-section" id="faq"><div className="container faq-layout"><div><span className="eyebrow"><span />FAQs</span><h2>Dental Implants<br /><em>London FAQs</em></h2><p>Got questions about dental implants in London? Find answers below or visit our <a href="/faq">full FAQ page.</a></p><a className="text-link" href="/faq">Full FAQ page<ArrowUpRight size={17} /></a></div><div className="faq-list">{faqs.map(([question, answer], index) => <details key={question} open={index === 0}><summary>{question}<Plus size={19} /></summary><p>{answer}</p></details>)}</div></div></section>
+    <FaqSection />
     <section className="contact-band"><div className="container"><div><span className="eyebrow">Visit our clinics</span><h2>Get in Touch</h2></div><div><Button light>Free 15-min chat</Button><a className="contact-phone" href="tel:02071833573"><Phone size={18} />020 71833573</a></div></div></section>
   </main>
 }
@@ -198,12 +186,12 @@ function ContentPage({ path }: { path: string }) {
   useEffect(() => {
     if (!entry) return
     const controller = new AbortController()
-    fetch(`/content/${entry.file}`, { signal: controller.signal }).then(response => { if (!response.ok) throw new Error('Content unavailable'); return response.json() }).then((data: SourcePage) => { setPage(data); document.title = data.seoTitle; document.querySelector('meta[name="description"]')?.setAttribute('content', data.description) }).catch(error => { if (error.name !== 'AbortError') setFailed(true) })
+    fetch(`/content/${entry.file}`, { signal: controller.signal }).then(response => { if (!response.ok) throw new Error('Content unavailable'); return response.json() }).then((data: SourcePage) => { setPage({ ...data, html: localBookingHtml(data.html) }); document.title = data.seoTitle; document.querySelector('meta[name="description"]')?.setAttribute('content', data.description) }).catch(error => { if (error.name !== 'AbortError') setFailed(true) })
     return () => controller.abort()
   }, [entry])
   if (!entry || failed) return <main id="main" className="container route-state"><h1>{failed ? 'Page unavailable' : 'Page not found'}</h1><Button href={failed ? `${live}${path}` : '/'}>{failed ? 'View original page' : 'Dental Implants London'}</Button></main>
   if (!page) return <main id="main" className="container route-state" aria-busy="true"><span className="loading-ring" /><p>Loading...</p></main>
-  return <main id="main" className="content-page"><div className="container breadcrumbs"><a href="/">Dental Implants London</a><ChevronRight size={14} /><span>{page.title}</span></div>{path === '/gallery' ? <GalleryPage page={page} /> : <InnerPage key={path} html={page.html} path={path} />}<section className="contact-band"><div className="container"><h2>Get in Touch</h2><Button light>Book consultation</Button></div></section></main>
+  return <main id="main" className="content-page"><div className="container breadcrumbs"><a href="/">Dental Implants London</a><ChevronRight size={14} /><span>{page.title}</span></div>{path === '/gallery' ? <GalleryPage page={page} /> : <InnerPage key={path} html={page.html} path={path} />}<PageSections path={path} /><section className="contact-band"><div className="container"><h2>Get in Touch</h2><Button light>Book consultation</Button></div></section></main>
 }
 
 function Footer() {
@@ -212,10 +200,7 @@ function Footer() {
 
 function App() {
   const path = window.location.pathname.replace(/\/$/, '') || '/'
-  useEffect(() => {
-    if (path === '/booking') window.location.replace(booking + window.location.search)
-  }, [path])
-  return <><a className="skip-link" href="#main">Skip to content</a><Header />{path === '/' ? <HomePage /> : path === '/booking' ? <main id="main" className="container route-state"><Button>Book Your Appointment</Button></main> : <ContentPage path={path} />}<Footer /></>
+  return <><a className="skip-link" href="#main">Skip to content</a><Header />{path === '/' ? <HomePage /> : /^\/booking(?:\/|$)/.test(path) ? <BookingPage /> : <ContentPage path={path} />}<Footer /></>
 }
 
 export default App

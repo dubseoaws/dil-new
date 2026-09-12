@@ -1,3 +1,65 @@
+.inner-page .inner-treatment-video{display:block;width:100%;max-width:900px;aspect-ratio:16/9;border:0;border-radius:6px;margin:28px 0 12px;background:#102440}
+.inner-page .inner-heading-with-video>.container{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:center;gap:48px}
+.inner-page .inner-heading-with-video .page-hero-copy h1{font-size:48px;text-wrap:initial}
+.inner-page .inner-hero-video{min-width:0;padding:32px 0}
+.inner-page .inner-hero-video .inner-treatment-video{margin:0 0 12px}
+.inner-page .inner-hero-video>a{display:inline-flex;align-items:center;gap:8px;font-size:14px;color:var(--primary);text-underline-offset:4px}
+@media(max-width:1000px){.inner-page .inner-heading-with-video>.container{grid-template-columns:1fr;gap:0}.inner-page .inner-hero-video{padding:0 0 32px}.inner-page .inner-heading-with-video .page-hero-copy h1{font-size:38px}}
+.inner-page .inner-band-content .inner-grid-three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.inner-page .inner-grid>a.inner-item{display:flex;flex-direction:column;text-decoration:none}
+.inner-page .inner-grid>a.inner-item:hover{border-color:#8da7c9;background:#f8faff}
+.inner-page .inner-grid>a.inner-item>div:last-child{margin-top:auto;padding-top:12px;color:var(--primary);font-weight:650;font-size:14px}
+.inner-page .inner-facts-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px 28px;margin:24px 0}
+.inner-page .inner-facts-grid>div,.inner-page .inner-facts-grid>span{padding:12px 0;border-bottom:1px solid var(--line);min-width:0}
+.inner-page .inner-facts-grid p{margin:0;font-size:15px}
+.inner-page .inner-facts-grid p:first-child{font-weight:650;color:var(--ink)}
+.inner-page .inner-stats-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+.inner-page .inner-stats-grid>div>div:first-child{font-family:var(--serif);font-size:32px;line-height:1.3;color:var(--primary);margin-bottom:8px}
+.inner-page .inner-reviews-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px;margin:24px 0}
+.inner-page .inner-reviews-grid>div{padding:24px;border-top:3px solid var(--primary);background:white}
+.inner-page .inner-reviews-grid p{font-size:16px}
+.inner-page .inner-clinic-details{display:grid;grid-template-columns:1fr 1fr;gap:20px 40px;padding:28px 0;margin:24px 0;border-top:1px solid var(--line)}
+.inner-page .inner-clinic-details>div:has(.inner-hours-list){grid-column:2;grid-row:1 / span 2}
+.inner-page .inner-hours-list{list-style:none;padding:0;margin:0}
+.inner-page .inner-hours-list .inner-key-value{margin:0;font-size:15px;max-width:none}
+.inner-page .inner-feature-layout{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);gap:64px;align-items:center}
+.inner-page .inner-price-display{border-left:1px solid #aec0d8;padding:48px;text-align:center;color:var(--primary);font-family:var(--serif);font-size:32px;line-height:1.5}
+.inner-page .inner-price-display>div{display:block}
+.inner-page .inner-price-display .inner-facts-grid{display:block}
+.inner-page .inner-price-display .inner-facts-grid>div{border:0;padding:4px 0}
+.inner-page .inner-band-content .inner-results-grid{grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}
+.inner-page .inner-results-grid>.inner-item{padding:24px}
+.inner-page .inner-results-grid .inner-comparison-pair figure{border:0;border-radius:0}
+.inner-page .inner-results-grid .inner-comparison-pair img{width:100%;height:auto;aspect-ratio:1.5;object-fit:contain;margin:0;border-radius:0}
+.inner-page .inner-band-content a:has(>span+span)>span{display:block}
+.inner-page .inner-band-content h2:not(:first-child){margin-top:40px}
+.inner-page .inner-band-content .inner-item h2{margin-top:0}
+.inner-page .inner-band-content section{border-bottom:0}
+.inner-page .inner-image-grid{align-items:stretch}
+@media(max-width:1000px){.inner-page .inner-band-content .inner-grid-three,.inner-page .inner-facts-grid,.inner-page .inner-reviews-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.inner-page .inner-feature-layout{gap:32px}.inner-page .inner-price-display{padding:24px}}
+@media(max-width:700px){.inner-page .inner-band-content .inner-grid-three,.inner-page .inner-band-content .inner-results-grid,.inner-page .inner-reviews-grid,.inner-page .inner-clinic-details,.inner-page .inner-feature-layout{grid-template-columns:1fr}.inner-page .inner-facts-grid,.inner-page .inner-stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.inner-page .inner-clinic-details>div:has(.inner-hours-list){grid-column:auto;grid-row:auto}.inner-page .inner-price-display{border-left:0;border-top:1px solid var(--line)}.inner-page .inner-results-grid>.inner-item{padding:16px}}
+.inner-page .inner-band-content .inner-media-layout{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:56px;align-items:center;margin:32px 0}
+.inner-page .inner-media-layout>*{min-width:0}
+.inner-page .inner-media-layout .inner-media-column img{display:block;width:100%;height:auto;max-height:460px;object-fit:contain;margin:0}
+.inner-page .inner-media-layout .inner-copy-column>h2:first-child,.inner-page .inner-media-layout .inner-copy-column>h3:first-child{margin-top:0}
+.inner-page .inner-comparison-pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin:24px 0}
+.inner-page .inner-comparison-pair figure{margin:0;min-width:0;background:#fff;border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.inner-page .inner-comparison-pair img{width:100%;height:auto;aspect-ratio:1.5;object-fit:contain;margin:0;border-radius:0;background:#f0f3f7}
+.inner-page .inner-comparison-pair figcaption{padding:10px 16px;font-size:14px;font-weight:650;color:var(--primary)}
+.inner-page .inner-media-gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;margin:28px 0;align-items:start}
+.inner-page .inner-media-gallery>div{min-width:0}
+.inner-page .inner-media-gallery img{width:100%;margin:0}
+.inner-page .inner-media-gallery>.inner-comparison-pair{margin:0;gap:10px}
+.inner-page .inner-link-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0 28px;margin:24px 0}
+.inner-page .inner-link-grid>a{display:block;padding:18px 0;border-bottom:1px solid var(--line);font-size:16px;text-decoration:none}
+.inner-page .inner-link-grid>a:hover{text-decoration:underline}
+.inner-page .inner-link-grid p{margin:0}
+.inner-reading-page .inner-band-content .inner-article-image{margin:0 0 36px}
+.inner-reading-page .inner-band-content .inner-article-image img{width:100%;height:auto;max-height:460px;object-fit:contain;margin:0 auto}
+.inner-page .inner-band-content .inner-profile+.inner-profile{border-top:1px solid var(--line);padding-top:48px;margin-top:48px}
+.inner-page .inner-band-content table{display:table;margin:0}
+@media(max-width:1000px){.inner-page .inner-band-content .inner-media-layout{gap:30px}.inner-page .inner-link-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){.inner-page .inner-band-content .inner-media-layout{grid-template-columns:1fr;gap:24px}.inner-page .inner-media-gallery,.inner-page .inner-link-grid{grid-template-columns:1fr}.inner-page .inner-comparison-pair{gap:10px}.inner-page .inner-comparison-pair figcaption{padding:8px 10px}.inner-page .inner-band-content .inner-profile+.inner-profile{padding-top:32px;margin-top:32px}}
 .inner-page .inner-image-grid.inner-staff-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
 .inner-page .inner-image-grid.inner-staff-grid img{height:280px;object-position:top}
 .inner-page .inner-staff-grid .inner-item h3,.inner-page .inner-staff-grid .inner-item p{margin:14px 18px}
@@ -55,7 +117,7 @@
 .inner-page .inner-item>*:last-child{margin-bottom:0}
 .inner-page .inner-item .inner-grid{display:block;margin:0}
 .inner-page .inner-item .inner-item{border:0;padding:0;background:none}
-.inner-page .inner-image-grid{grid-template-columns:repeat(3,minmax(0,1fr));align-items:start}
+.inner-page .inner-image-grid{grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));align-items:start}
 .inner-page .inner-image-grid>.inner-item{padding:0;overflow:hidden}
 .inner-page .inner-image-grid>.inner-item>div:not(:has(img)),.inner-page .inner-image-grid>.inner-item>a>div:not(:has(img)){padding:20px}
 .inner-page .inner-image-grid img{width:100%;height:240px;object-fit:cover;margin:0;border-radius:0}

@@ -7,7 +7,6 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
-    "test": "playwright test tests/site.spec.ts --reporter=line",
     "content:refresh": "node scripts/import-content.mjs && node scripts/prepare-content.mjs",
     "preview": "vite preview"
   },
@@ -17,7 +16,6 @@
     "react-dom": "^19.2.8"
   },
   "devDependencies": {
-    "@playwright/test": "^1.63.0",
     "@types/node": "^24.13.3",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.7",

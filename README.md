@@ -6,7 +6,7 @@ React 19, TypeScript, Vite and Lucide icons. A responsive deep-blue and white de
 
 ```sh
 npm install
-npm run dev -- --host 127.0.0.1 --port 5173
+npm run dev -- --host localhost --port 5173
 ```
 
 Open the URL printed by Vite. It selects another port if 5173 is occupied.
@@ -18,17 +18,28 @@ npm run preview
 
 ## Verify
 
-Keep the development server running, then:
-
 ```sh
-npx playwright install chromium
-npm test
+npm run build
 npm run lint
 ```
 
-Use `TEST_BASE_URL=http://127.0.0.1:5174 npm test` for a different server port. Tests cover five screen widths, treatment tabs and keyboard controls, before/after comparison, clinic selection, FAQs, team scrolling, source image loading, booking links, and representative content routes. Screenshots are written to the ignored `test-results` directory.
+The automated test suite and Playwright dependency have been removed at the project owner's request.
 
-Run the exhaustive inner-page audit with `AUDIT_ALL_ROUTES=1 npm test -- --grep 'exhaustive inner-route'`. It checks all 825 inner routes at mobile and desktop widths for missing renders, horizontal overflow and preserved source headings. The regular suite also checks article search and pagination, profile layouts, section navigation and expandable FAQs.
+## Booking and Resend
+
+`/booking` and its legacy child URLs render the local five-step appointment request form. Homepage, gallery and imported page booking links stay on this site. `POST /api/booking` validates the request and sends the clinic an email using Resend; the visitor sees a reference only after Resend accepts the email. Appointment times are preferences, not live availability or confirmed reservations. No payment is taken and no patient confirmation email is sent.
+
+Set these server-only variables in `.env.local` for local development and in the Vercel project's environment settings for deployment. Use `.env.example` as the template. Never prefix these names with `VITE_` or put secrets in frontend code.
+
+- `RESEND_API_KEY`: your Resend sending API key.
+- `BOOKING_EMAIL_TO`: the clinic inbox, or comma-separated recipient addresses. Confirm the destination before enabling delivery.
+- `BOOKING_EMAIL_FROM`: a sender on a domain verified in your Resend account, for example `Dental Implants London <bookings@yourverifieddomain.co.uk>`.
+
+Restart the development server after changing environment variables; redeploy after setting production variables. `npm run dev` serves both the frontend and API locally. `npm run preview` is a static preview only and does not serve the booking API. A static-only hosting provider cannot deliver booking email without a server endpoint.
+
+Service prices, clinic restrictions and published hours are shared between the form and endpoint. Dates use London time, from tomorrow through the next 28 days; half-hour preferred start times leave one hour before closing. City weekend requests are unavailable because no weekend hours were supplied by the source. These are request options, not a practice-management calendar.
+
+The API includes bounded input, server-side service/date validation, HTML escaping, contact permission, a honeypot, origin checking, a Resend timeout and idempotency for retries. Its five-request/15-minute IP limit is per running instance, not a distributed abuse control; configure a production WAF rate limit for `/api/booking` before public launch. Patient details are sent to Resend and the configured inbox, not stored in a project database. Review privacy wording, recipient access and email retention before accepting patient information.
 
 ## Content Provenance
 
@@ -36,9 +47,11 @@ Run the exhaustive inner-page audit with `AUDIT_ALL_ROUTES=1 npm test -- --grep 
 - The source sitemap supplied 827 pages, including treatments, team, clinic locations, pricing, articles, service areas and policies.
 - `src/data/live-content.json` retains the imported page copy, image references, metadata and source URLs.
 - `public/content` contains individual page payloads, loaded only when their route is visited. `src/InnerPage.tsx` preserves the imported content while structuring headers, section navigation, repeated-item grids, staff profiles, comparison tables and FAQs. Articles and policies use a narrower reading layout; the gallery has a dedicated comparison grid.
+- Inner-page layouts also group image/copy pairs, clinic details, price facts and long directories, split long treatment wrappers into sections, and present imported before/after images with their original labels. Questions without source answers remain text; no clinical answers are generated.
+- `src/ClinicLocations.tsx` renders both clinics' Google maps, addresses, telephone links and opening hours from `src/data/clinics.ts` across the homepage, 17 imported location sections, contact, clinic and service-area pages. Hours and phone numbers come from the imported `/south-kensington` and `/city-of-london` pages. City weekend hours are not supplied by the source and are not assumed. Map frames load lazily from Google; directions links remain available separately.
 - `public/content/blog-index.json` is generated by `scripts/prepare-content.mjs` from the 680 source articles. The blog and its numbered archive URLs use searchable, paginated article cards; archive pages are excluded from search results.
 - `src/data/home.json` contains original homepage sections; `src/data/assets.json` maps verified source URLs to 18 downloaded images in `public/images`. Other imported images retain their original public URLs.
-- Source scripts, embedded frames, forms, styling and event handlers are stripped. Booking controls use the live booking page. This project does not store patient data, accept payments or submit appointment requests itself.
+- Source scripts, embedded frames, forms, styling and event handlers are stripped. The local booking form submits appointment requests by email through Resend; the original scheduling backend is not used.
 - The optional Cloudinary console is not a public image library. No account access or credentials were used. No unverified YouTube videos were embedded.
 
 Refresh imported content with:
@@ -51,12 +64,12 @@ Review refreshed content before publication. Bespoke homepage passages in `src/A
 
 ## Before Replacing the Live Site
 
-This is a local design implementation, not a production deployment. Keep the current booking service available. Complete a production SEO migration review: server rendering or prerendering, canonical URLs, sitemap, structured data, redirects and consent requirements. Dynamic features from the original site's scripts, such as its booking backend, are not recreated by importing page content.
+This is a local implementation, not a production deployment. Configure the Resend variables and confirm email delivery before replacing the live booking service. Complete a production SEO migration review: server rendering or prerendering, canonical URLs, sitemap, structured data, redirects and consent requirements. Live calendar availability and payment processing are not implemented.
 
 ### Vercel
 
 Set the Vercel project Root Directory to the directory containing this package.json and vercel.json. The checked-in configuration uses the Vite framework, runs `npm run build`, and publishes `dist`. Use a Vite-compatible Node version, such as Node 22.12+ or Node 24.
 
-The routing configuration serves existing static files first, then falls back to index.html for React page URLs. This enables direct visits and refreshes on routes such as `/team`, `/gallery` and `/blog/0-percent-finance-dental-implants-monthly-cost` while preserving `/content/*.json`, images and compiled assets.
+The routing configuration preserves existing static files and the `/api/booking` serverless function, then falls back to index.html for React page URLs. This enables direct visits and refreshes on routes such as `/booking`, `/team`, `/gallery` and `/blog/0-percent-finance-dental-implants-monthly-cost` while preserving `/content/*.json`, images and compiled assets.
 
 Redeploy after publishing configuration changes; an existing deployment does not pick them up automatically. Confirm that direct page URLs and their refreshes work, and that `/content/team.json` returns JSON rather than HTML. Other hosting platforms need an equivalent SPA fallback.

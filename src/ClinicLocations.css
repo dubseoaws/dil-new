@@ -1,0 +1,18 @@
+.clinic-locations{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:32px;margin:32px 0}
+.clinic-locations .clinic-location{display:flex;flex-direction:column;min-width:0;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:#fff}
+.clinic-locations iframe{display:block;width:100%;height:300px;border:0;background:#eef2f6}
+.clinic-locations .clinic-location-details{display:flex;flex-direction:column;flex:1;padding:28px}
+.clinic-locations .clinic-location h3{font-family:var(--serif);font-size:30px;line-height:1.25;margin:0 0 22px}
+.clinic-locations h3 a{display:flex;justify-content:space-between;align-items:center;gap:12px;color:var(--ink);text-decoration:none}
+.clinic-locations svg{flex-shrink:0;color:var(--primary)}
+.clinic-locations address{display:flex;align-items:flex-start;gap:12px;font-style:normal;font-size:16px;line-height:1.7;color:var(--muted);min-height:55px;margin-bottom:16px}
+.clinic-locations address svg{margin-top:4px}
+.clinic-locations .clinic-location-phone{display:flex;align-items:center;gap:12px;font-size:16px;color:var(--primary);align-self:flex-start}
+.clinic-locations .clinic-location h4{display:flex;align-items:center;gap:12px;font-family:inherit;font-size:17px;font-weight:650;margin:28px 0 12px}
+.clinic-locations dl{margin:0 0 28px;font-size:15px;color:var(--muted)}
+.clinic-locations dl>div{display:flex;justify-content:space-between;align-items:baseline;gap:20px;padding:10px 0;border-bottom:1px solid var(--line)}
+.clinic-locations dt,.clinic-locations dd{margin:0;line-height:1.6}
+.clinic-locations dd{text-align:right}
+.clinic-locations .clinic-location-actions{display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-top:auto;padding-top:20px;border-top:1px solid var(--line)}
+.clinic-locations .clinic-location-actions a{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:650;color:var(--primary);text-underline-offset:4px}
+@media(max-width:760px){.clinic-locations{grid-template-columns:1fr;gap:24px}.clinic-locations iframe{height:260px}.clinic-locations .clinic-location-details{padding:22px}.clinic-locations .clinic-location h3{font-size:28px}.clinic-locations address{min-height:0}}
