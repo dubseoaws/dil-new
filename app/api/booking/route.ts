@@ -1,8 +1,8 @@
-import type { IncomingMessage, ServerResponse } from 'node:http'
-import { clinics } from '../src/data/clinics.ts'
-import { services, upcomingDays, isoDate, slotsFor } from '../src/data/booking.ts'
+import { clinics } from '@/src/data/clinics'
+import { services, upcomingDays, isoDate, slotsFor } from '@/src/data/booking'
 
-type BookingRequest = IncomingMessage & { body?: unknown }
+export const dynamic = 'force-dynamic'
+
 const attempts = new Map<string, { count: number; expires: number }>()
 
 const fields = ['service', 'price', 'clinic', 'clinicAddress', 'date', 'dateLabel', 'time', 'name', 'email', 'phone', 'notes'] as const
@@ -12,80 +12,57 @@ const required: Field[] = ['service', 'clinic', 'date', 'time', 'name', 'email',
 
 const escapeHtml = (value: string) => value.replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[character]!)
 const singleLine = (value: string) => value.replace(/[\r\n]+/g, ' ').trim()
+const send = (status: number, payload: unknown) => Response.json(payload, { status, headers: { 'Cache-Control': 'no-store' } })
 
-const readBody = async (request: BookingRequest) => {
-  if (Number(request.headers['content-length']) > 32_000) throw new Error('Request too large')
-  if (request.body && typeof request.body === 'object') {
-    if (JSON.stringify(request.body).length > 32_000) throw new Error('Request too large')
-    return request.body as Record<string, unknown>
-  }
-  if (typeof request.body === 'string' && Buffer.byteLength(request.body) > 32_000) throw new Error('Request too large')
-  if (typeof request.body === 'string') return JSON.parse(request.body) as Record<string, unknown>
-  const chunks: Buffer[] = []
-  let size = 0
-  for await (const chunk of request) {
-    size += (chunk as Buffer).length
-    if (size > 32_000) throw new Error('Request too large')
-    chunks.push(chunk as Buffer)
-  }
-  return JSON.parse(Buffer.concat(chunks).toString('utf8') || '{}') as Record<string, unknown>
-}
-
-const send = (response: ServerResponse, status: number, payload: unknown) => {
-  response.statusCode = status
-  response.setHeader('Content-Type', 'application/json')
-  response.setHeader('Cache-Control', 'no-store')
-  response.end(JSON.stringify(payload))
-}
-
-export default async function handler(request: BookingRequest, response: ServerResponse) {
-  if (request.method !== 'POST') {
-    response.setHeader('Allow', 'POST')
-    return send(response, 405, { error: 'Method not allowed' })
-  }
+export async function POST(request: Request) {
+  const headers = request.headers
   try {
-    if (!request.headers.origin || new URL(request.headers.origin).host !== request.headers.host) throw new Error('Invalid origin')
+    const origin = headers.get('origin')
+    if (!origin || new URL(origin).host !== headers.get('host')) throw new Error('Invalid origin')
   } catch {
-    return send(response, 403, { error: 'Please submit your request from our booking page.' })
+    return send(403, { error: 'Please submit your request from our booking page.' })
   }
-  if (!request.headers['content-type']?.startsWith('application/json')) return send(response, 415, { error: 'JSON required.' })
+  if (!headers.get('content-type')?.startsWith('application/json')) return send(415, { error: 'JSON required.' })
+
   const now = Date.now()
   for (const [key, attempt] of attempts) if (attempt.expires <= now) attempts.delete(key)
-  const address = process.env.VERCEL ? String(request.headers['x-real-ip'] || 'unknown') : request.socket.remoteAddress || 'unknown'
+  const address = headers.get('x-real-ip') || headers.get('x-forwarded-for')?.split(',')[0].trim() || 'unknown'
   const attempt = attempts.get(address) || { count: 0, expires: now + 15 * 60_000 }
   if (attempt.count >= 5 || (!attempts.has(address) && attempts.size >= 5000)) {
-    response.setHeader('Retry-After', '900')
-    return send(response, 429, { error: 'Too many requests. Please try again later or call 020 71833573.' })
+    return Response.json({ error: 'Too many requests. Please try again later or call 020 71833573.' }, { status: 429, headers: { 'Cache-Control': 'no-store', 'Retry-After': '900' } })
   }
   attempt.count++
   attempts.set(address, attempt)
 
   let raw: Record<string, unknown>
   try {
-    raw = await readBody(request)
+    if (Number(headers.get('content-length')) > 32_000) throw new Error('Request too large')
+    const body = await request.text()
+    if (body.length > 32_000) throw new Error('Request too large')
+    raw = JSON.parse(body || '{}') as Record<string, unknown>
     if (!raw || Array.isArray(raw) || typeof raw !== 'object') throw new Error('Invalid body')
   } catch {
-    return send(response, 400, { error: 'Could not read your booking request.' })
+    return send(400, { error: 'Could not read your booking request.' })
   }
 
   const booking = {} as Record<Field, string>
   for (const field of fields) {
     const value = typeof raw[field] === 'string' ? raw[field].trim() : ''
-    if (value.length > limits[field]) return send(response, 400, { error: `The ${field} field is too long.` })
+    if (value.length > limits[field]) return send(400, { error: `The ${field} field is too long.` })
     booking[field] = field === 'notes' ? value : singleLine(value)
   }
   const missing = required.filter(field => !booking[field])
-  if (missing.length) return send(response, 400, { error: 'Please complete every step before confirming.' })
-  if (raw.website || raw.consent !== true) return send(response, 400, { error: 'Please check your details and contact permission.' })
-  if (typeof raw.submissionId !== 'string' || !/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(raw.submissionId)) return send(response, 400, { error: 'Please reload the booking page and try again.' })
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(booking.email)) return send(response, 400, { error: 'Please enter a valid email address.' })
-  if (!/^[0-9+()\s-]{7,}$/.test(booking.phone)) return send(response, 400, { error: 'Please enter a valid phone number.' })
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(booking.date) || !/^\d{2}:\d{2}$/.test(booking.time)) return send(response, 400, { error: 'Please choose a valid date and time.' })
+  if (missing.length) return send(400, { error: 'Please complete every step before confirming.' })
+  if (raw.website || raw.consent !== true) return send(400, { error: 'Please check your details and contact permission.' })
+  if (typeof raw.submissionId !== 'string' || !/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(raw.submissionId)) return send(400, { error: 'Please reload the booking page and try again.' })
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(booking.email)) return send(400, { error: 'Please enter a valid email address.' })
+  if (!/^[0-9+()\s-]{7,}$/.test(booking.phone)) return send(400, { error: 'Please enter a valid phone number.' })
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(booking.date) || !/^\d{2}:\d{2}$/.test(booking.time)) return send(400, { error: 'Please choose a valid date and time.' })
   const service = services.find(item => item.name === booking.service)
   const clinic = clinics.find(item => item.name === booking.clinic)
   const date = upcomingDays().find(item => isoDate(item) === booking.date)
   if (!service || !clinic || (service.clinic && service.clinic !== clinic.path) || !date || !slotsFor(clinic.opening[date.getUTCDay()]).includes(booking.time)) {
-    return send(response, 400, { error: 'Please choose a valid service, clinic and preferred time within the next 28 days.' })
+    return send(400, { error: 'Please choose a valid service, clinic and preferred time within the next 28 days.' })
   }
   booking.price = service.price
   booking.clinicAddress = clinic.address
@@ -96,7 +73,7 @@ export default async function handler(request: BookingRequest, response: ServerR
   const from = process.env.BOOKING_EMAIL_FROM
   if (!apiKey || !to || !from) {
     console.error('Booking email is not configured: set RESEND_API_KEY, BOOKING_EMAIL_TO and BOOKING_EMAIL_FROM.')
-    return send(response, 500, { error: 'Online booking is temporarily unavailable. Please call 020 71833573.' })
+    return send(500, { error: 'Online booking is temporarily unavailable. Please call 020 71833573.' })
   }
 
   const reference = `DIL-${raw.submissionId.toUpperCase()}`
@@ -132,14 +109,14 @@ export default async function handler(request: BookingRequest, response: ServerR
     })
     if (!email.ok) {
       console.error('Resend rejected the booking email:', email.status)
-      return send(response, 502, { error: 'We could not send your request. Please call 020 71833573.' })
+      return send(502, { error: 'We could not send your request. Please call 020 71833573.' })
     }
     const result = await email.json() as { id?: string }
-    if (!result.id) return send(response, 502, { error: 'We could not confirm your request was sent. Please call 020 71833573.' })
+    if (!result.id) return send(502, { error: 'We could not confirm your request was sent. Please call 020 71833573.' })
   } catch {
     console.error('Booking email request failed.')
-    return send(response, 502, { error: 'We could not send your request. Please call 020 71833573.' })
+    return send(502, { error: 'We could not send your request. Please call 020 71833573.' })
   }
 
-  return send(response, 200, { reference })
+  return send(200, { reference })
 }

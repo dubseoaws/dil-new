@@ -1,8 +1,10 @@
+'use client'
+
 import { useEffect, useRef, useState } from 'react'
+import Link from 'next/link'
 import { ArrowLeft, ArrowRight, BadgeCheck, CalendarDays, Check, Clock3, Loader2, MapPin, Phone, ShieldCheck } from 'lucide-react'
-import { clinics } from './data/clinics'
-import { services, isoDate, upcomingDays, slotsFor } from './data/booking'
-import './BookingPage.css'
+import { clinics } from '../data/clinics'
+import { services, isoDate, upcomingDays, slotsFor } from '../data/booking'
 
 const stepNames = ['Service', 'Clinic', 'Date', 'Time', 'Details']
 const dayFormat = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/London', weekday: 'short', day: 'numeric', month: 'short' })
@@ -25,7 +27,6 @@ export function BookingPage() {
   const availableClinics = service?.clinic ? clinics.filter(item => item.path === service.clinic) : clinics
   const slots = clinic && date ? slotsFor(clinic.opening[date.getUTCDay()]) : []
 
-  useEffect(() => { document.title = 'Book Your Appointment | Dental Implants London' }, [])
   useEffect(() => { panel.current?.focus() }, [step, reference])
 
   const chooseService = (choice: (typeof services)[number]) => {
@@ -82,7 +83,7 @@ export function BookingPage() {
       <div><dt>Email</dt><dd>{details.email}</dd></div>
       <div><dt>Phone</dt><dd>{details.phone}</dd></div>
     </dl>
-    <div className="booking-confirmed-actions"><a className="button" href="/">Back to homepage<ArrowRight size={17} /></a><a className="text-link" href="tel:02071833573"><Phone size={16} />020 71833573</a></div>
+    <div className="booking-confirmed-actions"><Link className="button" href="/">Back to homepage<ArrowRight size={17} /></Link><a className="text-link" href="tel:02071833573"><Phone size={16} />020 71833573</a></div>
   </div></div></main>
 
   return <main id="main" className="booking-page">
