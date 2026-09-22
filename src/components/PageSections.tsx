@@ -1,8 +1,18 @@
 import Link from 'next/link'
-import { ArrowUpRight, BadgeCheck, Plus, Quote } from 'lucide-react'
+import { ArrowUpRight, Plus } from 'lucide-react'
 import home from '../data/home.json'
 import { assets, dentists, faqs, imageFor, reviews } from '../data/site'
+import { GoogleG, GoogleStars, GoogleWordmark } from './GoogleMarks'
 import { TeamControls } from './TeamControls'
+
+const REVIEW_PROFILE = 'https://share.google/FEhlEzh1JDaOMlqB0'
+const AVATAR_COLOURS = ['#1a73e8', '#c5221f', '#137333', '#b06000', '#8430ce', '#00697d']
+
+function avatarColour(seed: string) {
+  let total = 0
+  for (let index = 0; index < seed.length; index += 1) total += seed.charCodeAt(index)
+  return AVATAR_COLOURS[total % AVATAR_COLOURS.length]
+}
 
 export function SectionHeading({ eyebrow, title, children }: { eyebrow: string; title: string; children?: React.ReactNode }) {
   return <div className="section-heading"><div><span className="eyebrow"><span />{eyebrow}</span><h2>{title}</h2></div>{children}</div>
@@ -11,7 +21,7 @@ export function SectionHeading({ eyebrow, title, children }: { eyebrow: string; 
 export function GoogleReviews() {
   // The track holds two copies of the list so the translate loop is seamless.
   const loop = [...reviews, ...reviews]
-  return <section className="review-section"><div className="container review-head"><div><span className="eyebrow"><span />Patient reviews</span><h2>What Our London <em>Patients Say</em></h2></div><div className="review-rating"><span className="google-g">G</span><strong>4.9<span>/5</span></strong><span><span className="stars">★★★★★</span><small>247 Google Reviews</small></span></div></div><div className="review-marquee"><div className="review-track" style={{ '--review-count': reviews.length } as React.CSSProperties}>{loop.map((review, index) => <figure className="review-card" key={`${review.name}-${index}`} aria-hidden={index >= reviews.length || undefined}><Quote className="review-quote" size={26} /><blockquote>{review.text}</blockquote><figcaption className="review-author"><span className="avatar">{review.initials}</span><span><b>{review.name}</b><small><span className="google-g">G</span>Google review</small></span><BadgeCheck size={17} /></figcaption></figure>)}</div></div><div className="container review-foot"><a className="text-link" href="https://share.google/FEhlEzh1JDaOMlqB0">View more patient reviews<ArrowUpRight size={17} /></a><small className="review-disclaimer">These are genuine reviews from our patients. Individual treatment outcomes may vary.</small></div></section>
+  return <section className="review-section"><div className="container review-head"><div><span className="eyebrow"><span />Patient reviews</span><h2>What Our London <em>Patients Say</em></h2></div><a className="google-rating-card" href={REVIEW_PROFILE} target="_blank" rel="noopener noreferrer"><span className="grc-brand"><GoogleWordmark />Reviews</span><span className="grc-score"><strong>4.9</strong><span><GoogleStars value={4.9} size={19} /><small>Based on 247 reviews</small></span></span><span className="grc-link">See all reviews<ArrowUpRight size={15} /></span></a></div><div className="review-marquee"><div className="review-track" style={{ '--review-count': reviews.length } as React.CSSProperties}>{loop.map((review, index) => <figure className="review-card" key={`${review.name}-${index}`} aria-hidden={index >= reviews.length || undefined}><figcaption className="review-author"><span className="avatar" style={{ background: avatarColour(review.name) }}>{review.initials.charAt(0)}</span><span><b>{review.name}</b><small>Google review</small></span><GoogleG size={21} /></figcaption><GoogleStars size={17} /><blockquote>{review.text}</blockquote></figure>)}</div></div><div className="container review-foot"><a className="text-link" href={REVIEW_PROFILE}>View more patient reviews<ArrowUpRight size={17} /></a><small className="review-disclaimer">These are genuine reviews from our patients. Individual treatment outcomes may vary.</small></div></section>
 }
 
 export function TeamSection() {

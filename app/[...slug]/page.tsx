@@ -11,6 +11,9 @@ import { PageSections } from '@/src/components/PageSections'
 
 export const dynamicParams = false
 
+// Sections that own child routes, so those pages can show a middle breadcrumb.
+const sections: Record<string, string> = { blog: 'Blog', conditions: 'Conditions We Treat', 'areas-we-serve': 'Areas We Serve' }
+
 export function generateStaticParams() {
   return contentPages.filter(page => page.path !== '/' && page.path !== '/booking').map(page => ({ slug: page.path.slice(1).split('/') }))
 }
@@ -31,9 +34,11 @@ export default async function Page({ params }: { params: Promise<{ slug: string[
   const html = localBookingHtml(page.html)
   const isDirectory = path === '/blog' || path.startsWith('/blog/page/')
   const blog = isDirectory ? await blogPage(path) : undefined
+  const [, parent] = path.split('/')
+  const section = path.split('/').length > 2 ? sections[parent] : undefined
 
   return <main id="main" className="content-page">
-    <div className="container breadcrumbs"><Link href="/">Dental Implants London</Link><ChevronRight size={14} /><span>{page.title}</span></div>
+    <nav className="container breadcrumbs" aria-label="Breadcrumb"><Link href="/">Home</Link><ChevronRight size={14} />{section && <><Link href={`/${parent}`}>{section}</Link><ChevronRight size={14} /></>}<span aria-current="page">{page.title}</span></nav>
     {path === '/gallery'
       ? <GalleryPage gallery={galleryContent(html)} />
       : <InnerPage content={innerPageContent(html, path)} path={path} blog={blog} />}
