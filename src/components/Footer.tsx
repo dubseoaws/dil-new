@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { ArrowUpRight, Mail, Phone, ShieldCheck } from 'lucide-react'
-import { treatments } from '../data/treatments'
+import { treatmentMenu } from '../data/treatments'
 import { Brand, Button } from './ui'
 
 export function Footer() {
@@ -9,7 +9,7 @@ export function Footer() {
     <footer className="footer"><div className="container"><div className="footer-grid">
       <div><Brand /><p>Established dental implants London practice with clinics in South Kensington and the City of London. Affordable teeth implants from £2,950 with 0% finance (subject to status), placed by GDC-registered implant dentists.</p><a href="https://www.instagram.com/dentalimplantlondon/" className="text-link">Instagram<ArrowUpRight size={15} /></a></div>
       <div><h3>Navigation</h3>{[['Meet the Team', '/team'], ['Smile Gallery', '/gallery'], ['Implant Cost', '/dental-implants-cost'], ['Areas We Serve', '/areas-we-serve'], ['Blog', '/blog'], ['FAQ', '/faq']].map(([label, href]) => <Link href={href} key={href}>{label}</Link>)}</div>
-      <div><h3>Treatments</h3>{treatments.map(item => <Link href={item.path} key={item.path}>{item.title}</Link>)}<Link href="/conditions">Conditions We Treat</Link><Link href="/compare-treatments">Compare Treatments</Link></div>
+      <div><h3>Treatments</h3>{treatmentMenu.map(item => <Link href={item.path} key={item.path}>{item.title}</Link>)}<Link href="/missing-teeth">Missing Teeth</Link><Link href="/severe-tooth-loss">Severe Tooth Loss</Link><Link href="/conditions">Conditions We Treat</Link><Link href="/compare-treatments">Compare Treatments</Link></div>
       <div><h3>Contact</h3><p>20 Old Brompton Road,<br />South Kensington,<br />London SW7 3DL</p><a href="tel:02071833573"><Phone size={14} />020 71833573</a><a href="mailto:info@dental-implants-london.co.uk"><Mail size={14} />Email us</a><Link href="/contact">Contact Us<ArrowUpRight size={14} /></Link></div>
     </div>
     <div className="footer-legal">{[['Terms and Conditions', '/terms'], ['Privacy Policy', '/privacy-policy'], ['Membership Policy', '/membership-policy'], ['Cookie Policy', '/cookie-policy'], ['Cancellation Policy', '/cancellation-policy'], ['Complaints Procedure', '/terms#complaints']].map(([label, href]) => <Link key={label} href={href}>{label}</Link>)}</div>
