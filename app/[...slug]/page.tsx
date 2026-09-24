@@ -3,10 +3,12 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { ChevronRight } from 'lucide-react'
 import { contentPages, loadBlogIndex, loadPage } from '@/lib/content'
-import { galleryContent, innerPageContent, localBookingHtml } from '@/lib/html'
+import { allOnFourContent, galleryContent, innerPageContent, localBookingHtml, singleToothContent } from '@/lib/html'
 import { Button } from '@/src/components/ui'
 import { InnerPage } from '@/src/components/InnerPage'
 import { GalleryPage } from '@/src/components/GalleryPage'
+import { AllOnFourPage } from '@/src/components/AllOnFourPage'
+import { SingleToothPage } from '@/src/components/SingleToothPage'
 import { PageSections } from '@/src/components/PageSections'
 
 export const dynamicParams = false
@@ -36,14 +38,23 @@ export default async function Page({ params }: { params: Promise<{ slug: string[
   const blog = isDirectory ? await blogPage(path) : undefined
   const [, parent] = path.split('/')
   const section = path.split('/').length > 2 ? sections[parent] : undefined
+  const isAllOnFour = path === '/all-on-4-dental-implants'
+  const isSingleTooth = path === '/single-tooth-implant'
+  const bespoke = isAllOnFour || isSingleTooth
 
   return <main id="main" className="content-page">
     <nav className="container breadcrumbs" aria-label="Breadcrumb"><Link href="/">Home</Link><ChevronRight size={14} />{section && <><Link href={`/${parent}`}>{section}</Link><ChevronRight size={14} /></>}<span aria-current="page">{page.title}</span></nav>
-    {path === '/gallery'
-      ? <GalleryPage gallery={galleryContent(html)} />
-      : <InnerPage content={innerPageContent(html, path)} path={path} blog={blog} />}
-    <PageSections path={path} />
-    <section className="contact-band"><div className="container"><h2>Get in Touch</h2><Button light>Book consultation</Button></div></section>
+    {isAllOnFour
+      ? <AllOnFourPage content={allOnFourContent(html)} />
+      : isSingleTooth
+        ? <SingleToothPage content={singleToothContent(html)} />
+        : path === '/gallery'
+          ? <GalleryPage gallery={galleryContent(html)} />
+          : <InnerPage content={innerPageContent(html, path)} path={path} blog={blog} />}
+    {!bespoke && <>
+      <PageSections path={path} />
+      <section className="contact-band"><div className="container"><h2>Get in Touch</h2><Button light>Book consultation</Button></div></section>
+    </>}
   </main>
 }
 

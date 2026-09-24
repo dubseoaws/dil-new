@@ -36,10 +36,8 @@ export function FaqSection() {
   return <section className="section faq-section" id="faq"><div className="container faq-layout"><div><span className="eyebrow"><span />FAQs</span><h2>Dental Implants<br /><em>London FAQs</em></h2><p>Got questions about dental implants in London? Find answers below or visit our <Link href="/faq">full FAQ page.</Link></p><Link className="text-link" href="/faq">Full FAQ page<ArrowUpRight size={17} /></Link></div><div className="faq-list">{faqs.map(([question, answer], index) => <details key={question} open={index === 0}><summary>{question}<Plus size={19} /></summary><p>{answer}</p></details>)}</div></div></section>
 }
 
-// Blog articles, the pricing page and booking keep their own focused layout.
 export function PageSections({ path }: { path: string }) {
-  const isBlogArticle = path.startsWith('/blog/') && !path.startsWith('/blog/page/')
-  if (isBlogArticle || path === '/dental-implants-cost' || path === '/booking') return null
+  if (path === '/booking') return null
   return <>
     <GoogleReviews />
     {path !== '/faq' && <FaqSection />}

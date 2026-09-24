@@ -87,3 +87,22 @@
 h1,h2,h3,h4,p,li,summary,dt,dd,td,th,figcaption,.inner-key-value span{overflow-wrap:break-word}
 @media(max-width:700px){.hero-price,.intro-stat,.large-price{flex-wrap:wrap}}
 @media(max-width:370px){.hero-price{gap:12px}.intro-stat{gap:14px}.gallery-heading h1{font-size:38px}}
+/* Mockup footer: uppercase column labels, two-clinic contact block, single legal bar. */
+.footer{background:#f7f9fc;border-top:1px solid var(--line);padding:64px 0 28px}
+.footer-grid{grid-template-columns:1.4fr .8fr 1fr 1.2fr;gap:48px}
+.footer-grid h3{font-size:12px;font-weight:750;letter-spacing:.08em;text-transform:uppercase;color:var(--ink);margin:6px 0 20px}
+.footer-grid>div>a:not(.brand):not(.text-link){font-size:14px;color:var(--muted);margin-bottom:12px}
+.footer-grid>div>a:not(.brand):not(.text-link):hover{color:var(--primary)}
+.footer-more{color:var(--primary)!important;font-weight:650}
+.footer-clinic{display:grid;gap:8px;margin-bottom:18px;font-size:14px;color:var(--muted)}
+.footer-clinic b{font-weight:700;color:var(--ink)}
+.footer-clinic span,.footer-clinic a{display:flex;align-items:flex-start;gap:8px;line-height:1.5}
+.footer-clinic svg{flex-shrink:0;margin-top:3px;color:var(--primary)}
+.footer-clinic a:hover{color:var(--primary)}
+.footer .footer-bottom{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px 24px;border-top:1px solid var(--line);padding-top:22px;margin-top:48px;font-size:13px;color:var(--muted)}
+.footer .footer-legal{display:flex;flex-wrap:wrap;gap:8px 22px;border:0;padding:0;margin:0;font-size:13px}
+.footer .footer-legal a:hover{color:var(--primary)}
+.footer .footer-registration{border-top:0;padding-top:0;margin-top:14px;font-size:12px}
+.footer .footer-registration .registration-copy{margin:0;font-size:12px}
+@media(max-width:1100px){.footer-grid{grid-template-columns:1fr 1fr;gap:36px}}
+@media(max-width:700px){.footer-grid{grid-template-columns:1fr}.footer .footer-bottom{flex-direction:column;align-items:flex-start}}

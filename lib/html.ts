@@ -3,6 +3,8 @@ import { assets } from '@/src/data/site'
 
 const SHOW_TEXT = 4
 const TEXT_NODE = 3
+const POSITION_PRECEDING = 2
+const POSITION_FOLLOWING = 4
 const liveHosts = ['www.dental-implants-london.co.uk', 'dental-implants-london.co.uk']
 // These source images 404 on the upstream CDN; rendering them would show a broken-image icon.
 const deadImages = [
@@ -209,7 +211,227 @@ export function innerPageContent(html: string, path: string): InnerContent {
   }
 }
 
+export type AllOnFourContent = {
+  hero: { eyebrow: string; title: string; intro: string; actions: { label: string; href: string }[]; note: string }
+  overview: { title: string; paragraphs: string[] }
+  concept: { title: string; paragraphs: string[] }
+  difference: { title: string; intro: string; columns: { title: string; items: string[] }[]; closing: string }
+  benefits: { title: string; intro: string; items: { title: string; text: string }[]; note: string }
+  suitability: { title: string; intro: string; items: string[]; action: string; aside: { title: string; paragraphs: string[] } }
+  process: { title: string; intro: string; steps: { number: string; title: string; text: string }[]; note: string }
+  video: { title: string; text: string }
+  pricing: { title: string; lead: string[]; factors: string[]; trailing: string[]; action: { label: string; href: string } }
+  comparison: { title: string; intro: string; head: string[]; rows: string[][]; note: string }
+  cases: { eyebrow: string; title: string; paragraphs: string[]; items: { eyebrow: string; title: string; before: GalleryImage; after: GalleryImage; caption: string }[]; credit: string; gallery: { label: string; href: string } }
+  reasons: { title: string; intro: string; items: { title: string; text: string }[] }
+  areas: { eyebrow: string; title: string; intro: string; places: string[]; note: string }
+  cta: { title: string; paragraphs: string[]; action: { label: string; href: string } }
+  related: { title: string; links: { href: string; title: string; text: string }[]; more: { label: string; href: string } }
+}
+
+// Structured read of the imported All-on-4 markup so the bespoke layout can place each block deliberately.
+export function allOnFourContent(html: string): AllOnFourContent {
+  const document = parse(html)
+  const text = (element: Element | null | undefined) => element?.textContent?.replace(/\s+/g, ' ').trim() || ''
+  const heading = (title: string) => Array.from(document.querySelectorAll('h1,h2,h3')).find(element => text(element) === title)!
+  const paragraphs = (element: Element) => Array.from(element.querySelectorAll(':scope > p')).map(paragraph => paragraph.innerHTML.trim())
+  const listItems = (element: Element) => Array.from(element.querySelectorAll('li')).map(text)
+  const cards = (element: Element) => Array.from(element.querySelectorAll(':scope > div > div')).map(card => ({ title: text(card.querySelector('h3')), text: text(card.querySelector('p')) }))
+  const link = (anchor: Element | null) => ({ label: text(anchor), href: anchor?.getAttribute('href') || '/booking' })
+  const asset = (image: Element): GalleryImage => {
+    const src = image.getAttribute('src') || ''
+    return { src: assets[src] || src, alt: image.getAttribute('alt') || '' }
+  }
+
+  const hero = document.querySelector('.page-hero-copy')!
+  const heroParagraphs = Array.from(hero.querySelectorAll(':scope > p'))
+  const overview = heading('Replacing a Full Arch of Teeth with Just Four Implants').parentElement!
+  const concept = heading('What Are All-on-4 Dental Implants?').parentElement!
+  const difference = heading('How Are All-on-4 Implants Different from Traditional Dental Implants?').parentElement!
+  const benefits = heading('Benefits of All-on-4 Dental Implants').parentElement!
+  const benefitParagraphs = paragraphs(benefits)
+  const suitability = heading('Who Is Suitable for All-on-4?').parentElement!
+  const aside = suitability.nextElementSibling!
+  const processHeader = heading('The All-on-4 Treatment Process').parentElement!
+  const video = heading('Watch: Full Mouth Dental Implants').parentElement!
+  const pricing = heading('All-on-4 Price in London').parentElement!
+  const pricingList = pricing.querySelector('ul')!
+  const pricingParagraphs = Array.from(pricing.querySelectorAll(':scope > p'))
+  const comparison = heading('All-on-4 vs Removable Dentures').parentElement!
+  const comparisonParagraphs = paragraphs(comparison)
+  const casesHeader = heading('All-on-4 Case Examples').parentElement!
+  const casesSection = casesHeader.parentElement!
+  const reasons = heading('Why Choose Our South Kensington Clinic').parentElement!
+  const areasHeader = heading('Areas We Serve').parentElement!
+  const areasSection = areasHeader.parentElement!
+  const cta = heading('Considering All-on-4 Dental Implants?').parentElement!
+  const related = heading('Related Dental Implant Solutions').parentElement!
+
+  return {
+    hero: {
+      eyebrow: text(hero.querySelector('span')),
+      title: text(hero.querySelector('h1')),
+      intro: text(heroParagraphs[0]),
+      actions: Array.from(hero.querySelectorAll('a')).map(link),
+      note: text(heroParagraphs[1]),
+    },
+    overview: { title: text(overview.querySelector('h2')), paragraphs: paragraphs(overview) },
+    concept: { title: text(concept.querySelector('h2')), paragraphs: paragraphs(concept) },
+    difference: {
+      title: text(difference.querySelector('h2')),
+      intro: paragraphs(difference)[0],
+      columns: Array.from(difference.querySelectorAll(':scope > div > div')).map(column => ({ title: text(column.querySelector('h3')), items: listItems(column) })),
+      closing: paragraphs(difference).at(-1) || '',
+    },
+    benefits: { title: text(benefits.querySelector('h2')), intro: benefitParagraphs[0], items: cards(benefits), note: benefitParagraphs.at(-1) || '' },
+    suitability: {
+      title: text(suitability.querySelector('h2')),
+      intro: paragraphs(suitability)[0],
+      items: listItems(suitability),
+      action: Array.from(suitability.childNodes).filter(node => node.nodeType === TEXT_NODE).map(node => node.textContent?.trim()).join(' ').trim(),
+      aside: { title: text(aside.querySelector('h3')), paragraphs: paragraphs(aside) },
+    },
+    process: {
+      title: text(processHeader.querySelector('h2')),
+      intro: paragraphs(processHeader)[0],
+      steps: Array.from(processHeader.nextElementSibling!.children).map(step => ({ number: text(step.querySelector('span')), title: text(step.querySelector('h3')), text: text(step.querySelector('p')) })),
+      note: paragraphs(processHeader.parentElement!).at(-1) || '',
+    },
+    video: { title: text(video.querySelector('h2')), text: paragraphs(video)[0] },
+    pricing: {
+      title: text(pricing.querySelector('h2')),
+      lead: pricingParagraphs.filter(paragraph => paragraph.compareDocumentPosition(pricingList) & POSITION_FOLLOWING).map(paragraph => paragraph.innerHTML.trim()),
+      factors: listItems(pricingList),
+      trailing: pricingParagraphs.filter(paragraph => paragraph.compareDocumentPosition(pricingList) & POSITION_PRECEDING).map(paragraph => paragraph.innerHTML.trim()),
+      action: link(pricing.querySelector('a.source-booking')),
+    },
+    comparison: {
+      title: text(comparison.querySelector('h2')),
+      intro: comparisonParagraphs[0],
+      head: Array.from(comparison.querySelectorAll('thead th')).map(text),
+      rows: Array.from(comparison.querySelectorAll('tbody tr')).map(row => Array.from(row.querySelectorAll('td')).map(text)),
+      note: comparisonParagraphs.at(-1) || '',
+    },
+    cases: {
+      eyebrow: text(casesHeader.querySelector('span')),
+      title: text(casesHeader.querySelector('h2')),
+      paragraphs: paragraphs(casesHeader),
+      items: Array.from(casesHeader.nextElementSibling!.children).map(item => ({
+        eyebrow: text(item.querySelector('span')),
+        title: text(item.querySelector('h3')),
+        before: asset(item.querySelector('img[alt^="Before"]')!),
+        after: asset(item.querySelector('img[alt^="After"]')!),
+        caption: text(item.querySelector(':scope > p')),
+      })),
+      credit: casesSection.querySelector(':scope > p')?.innerHTML.trim() || '',
+      gallery: link(casesSection.querySelector('a[href="/gallery"]')),
+    },
+    reasons: { title: text(reasons.querySelector('h2')), intro: paragraphs(reasons)[0], items: cards(reasons) },
+    areas: {
+      eyebrow: text(areasHeader.querySelector('span')),
+      title: text(areasHeader.querySelector('h2')),
+      intro: paragraphs(areasHeader)[0],
+      places: Array.from(areasHeader.nextElementSibling!.querySelectorAll('span')).map(text),
+      note: areasSection.querySelector(':scope > p')?.innerHTML.trim() || '',
+    },
+    cta: { title: text(cta.querySelector('h3')), paragraphs: paragraphs(cta), action: link(cta.querySelector('a.source-booking')) },
+    related: {
+      title: text(related.querySelector('h3')),
+      links: Array.from(related.querySelectorAll(':scope > div > a')).map(anchor => ({ href: anchor.getAttribute('href') || '/', title: text(anchor.querySelector('p')), text: text(anchor.querySelectorAll('p')[1]) })),
+      more: link(related.querySelector(':scope > p > a')),
+    },
+  }
+}
+
 export type GalleryImage = { src: string; alt: string }
+
+export type SingleToothContent = {
+  hero: { eyebrow: string; title: string; price: string; intro: string; actions: { label: string; href: string }[]; trust: string[] }
+  overview: { title: string; text: string }
+  uses: { title: string; intro: string; items: string[] }
+  signature: { eyebrow: string; titleHtml: string; priceLabel: string; price: string; intro: string; tags: string[]; features: string[]; actions: { label: string; href: string }[]; note: string; card: string[] }
+  results: { eyebrow: string; title: string; hint: string; before: GalleryImage; after: GalleryImage; caption: string }
+  quote: { text: string; action: { label: string; href: string } }
+  parts: { title: string; intro: string; items: { title: string; text: string }[] }
+  procedure: { title: string; paragraphs: string[] }
+  aftercare: { title: string; text: string }
+  cta: { title: string; textHtml: string; action: { label: string; href: string } }
+  links: { href: string; eyebrow: string; title: string; text: string }[]
+}
+
+export function singleToothContent(html: string): SingleToothContent {
+  const document = parse(html)
+  const text = (element: Element | null | undefined) => element?.textContent?.replace(/\s+/g, ' ').trim() || ''
+  const heading = (title: string) => Array.from(document.querySelectorAll('h1,h2,h3')).find(element => text(element) === title)!
+  const link = (anchor: Element | null) => ({ label: text(anchor), href: anchor?.getAttribute('href') || '/booking' })
+  const asset = (image: Element): GalleryImage => {
+    const src = image.getAttribute('src') || ''
+    return { src: assets[src] || src, alt: image.getAttribute('alt') || '' }
+  }
+  const hero = document.querySelector('.page-hero-copy')!
+  const heroParagraphs = Array.from(hero.querySelectorAll(':scope > p'))
+  const overview = heading('What is a Single Tooth Implant?').parentElement!
+  const uses = heading('When are they used?').parentElement!
+  const signatureHeading = heading('The Signature Implant')
+  const signature = signatureHeading.parentElement!
+  const signatureParagraphs = Array.from(signature.querySelectorAll(':scope > p'))
+  const [tags, features] = Array.from(signature.querySelectorAll(':scope > div')).filter(group => group.children.length >= 3 && Array.from(group.children).every(child => child.querySelector('span')))
+  const priceCard = signature.nextElementSibling!
+  const resultsHead = heading('Before & After').parentElement!
+  const results = resultsHead.parentElement!
+  const resultsHint = resultsHead.querySelector('p')!
+  const quote = results.nextElementSibling!
+  const parts = heading('How does a single tooth implant work?').parentElement!
+  const procedure = heading('What does the treatment involve?').parentElement!.parentElement!
+  const aftercare = heading('Single Tooth Implant Aftercare').parentElement!
+  const cta = heading('Are you considering a single tooth implant in London?').parentElement!
+  return {
+    hero: {
+      eyebrow: text(hero.querySelector('span')),
+      title: text(hero.querySelector('h1')),
+      price: text(heroParagraphs[0]),
+      intro: text(heroParagraphs[1]),
+      actions: Array.from(hero.querySelectorAll('a')).map(link),
+      trust: text(heroParagraphs[2]).split('·').map(item => item.trim().replace(/^✓\s*/, '').trim()).filter(Boolean),
+    },
+    overview: { title: text(overview.querySelector('h2')), text: text(overview.querySelector('p')) },
+    uses: { title: text(uses.querySelector('h3')), intro: text(uses.querySelector('p')), items: Array.from(uses.querySelectorAll('span')).map(text) },
+    signature: {
+      eyebrow: text(signature.querySelector('span')),
+      titleHtml: signatureHeading.innerHTML.replace(/<span>(.*?)<\/span>/, '<em>$1</em>'),
+      priceLabel: text(signatureHeading.nextElementSibling!.querySelector('span')),
+      price: text(signatureHeading.nextElementSibling!.querySelectorAll('span')[1]).replace(/\*$/, ''),
+      intro: text(signatureParagraphs[0]),
+      tags: Array.from(tags.children).map(text),
+      features: Array.from(features.children).map(text),
+      actions: Array.from(signature.querySelectorAll('a.source-booking')).map(link),
+      note: signatureParagraphs[1].innerHTML.trim(),
+      card: Array.from(priceCard.querySelectorAll('div')).filter(cell => !cell.children.length).map(text).filter(Boolean),
+    },
+    results: {
+      eyebrow: text(results.querySelector('span')),
+      title: text(results.querySelector('h3')),
+      hint: `${text(resultsHint.querySelector('span'))} ${resultsHint.lastChild?.textContent?.trim() || ''}`.trim(),
+      before: asset(results.querySelector('img[alt^="Before"]')!),
+      after: asset(results.querySelector('img[alt^="After"]')!),
+      caption: text(results.querySelector(':scope > p')),
+    },
+    quote: { text: text(quote.querySelector('p')), action: link(quote.querySelector('a')) },
+    parts: {
+      title: text(parts.querySelector('h3')),
+      intro: text(parts.querySelector(':scope > p')),
+      items: Array.from(parts.querySelectorAll('h4')).map(item => ({ title: text(item), text: text(item.nextElementSibling) })),
+    },
+    procedure: { title: text(procedure.querySelector('h3')), paragraphs: Array.from(procedure.querySelectorAll('p')).map(text) },
+    aftercare: { title: text(aftercare.querySelector('h3')), text: text(aftercare.querySelector('p')) },
+    cta: { title: text(cta.querySelector('h3')), textHtml: cta.querySelector('p')?.innerHTML.trim() || '', action: link(cta.querySelector('a')) },
+    links: Array.from(cta.nextElementSibling!.querySelectorAll(':scope > a')).map(anchor => {
+      const [eyebrow, title, description] = Array.from(anchor.querySelectorAll('p')).map(text)
+      return { href: anchor.getAttribute('href') || '/', eyebrow, title, text: description }
+    }),
+  }
+}
+
 export type GalleryContent = {
   title: string
   eyebrow: string
