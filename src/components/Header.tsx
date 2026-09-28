@@ -9,6 +9,9 @@ import { Brand, Button } from './ui'
 
 
 //All done
+// content fixed
+
+
 export function Header() {
   const pathname = usePathname()
   const [openedAt, setOpenedAt] = useState<string | null>(null)
