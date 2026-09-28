@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { ChevronRight } from 'lucide-react'
-import { contentPages, loadBlogIndex, loadPage } from '@/lib/content'
+import { contentPages, loadBlogIndex, loadPage, pageMetadata } from '@/lib/content'
 import { allOnFourContent, galleryContent, innerPageContent, localBookingHtml, singleToothContent } from '@/lib/html'
 import { Button } from '@/src/components/ui'
 import { InnerPage } from '@/src/components/InnerPage'
@@ -24,9 +24,7 @@ const routeOf = async (params: Promise<{ slug: string[] }>) => `/${(await params
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string[] }> }): Promise<Metadata> {
   const page = await loadPage(await routeOf(params))
-  if (!page) return {}
-  // Some imported titles carry the brand suffix twice.
-  return { title: page.seoTitle.replace(/(\s*\|\s*Dental Implants London)+$/i, ' | Dental Implants London'), description: page.description }
+  return page ? pageMetadata(page) : {}
 }
 
 export default async function Page({ params }: { params: Promise<{ slug: string[] }> }) {
@@ -43,6 +41,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string[
   const bespoke = isAllOnFour || isSingleTooth
 
   return <main id="main" className="content-page">
+    {page.schema?.map((entry, index) => <script key={index} type="application/ld+json" dangerouslySetInnerHTML={{ __html: entry }} />)}
     <nav className="container breadcrumbs" aria-label="Breadcrumb"><Link href="/">Home</Link><ChevronRight size={14} />{section && <><Link href={`/${parent}`}>{section}</Link><ChevronRight size={14} /></>}<span aria-current="page">{page.title}</span></nav>
     {isAllOnFour
       ? <AllOnFourPage content={allOnFourContent(html)} />

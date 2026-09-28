@@ -187,3 +187,87 @@
 @media(max-width:700px){.inner-page .inner-profile{grid-template-columns:1fr;gap:24px}.inner-page .inner-profile img{height:360px;max-width:360px}.inner-page .inner-profile h2{font-size:30px}}
 @media(max-width:700px){.inner-page .inner-page-heading .page-hero-copy{padding:30px 0}.inner-page .page-hero-copy h1{font-size:38px;text-wrap:initial}.inner-page .page-hero-copy p,.inner-page p{font-size:16px}.inner-page .page-hero-copy h1+p{font-size:19px}.inner-page .inner-band{padding:32px 0}.inner-page h2{font-size:31px}.inner-page h3{font-size:26px}.inner-page .inner-grid,.inner-page .inner-image-grid,.inner-page-navigation ol{grid-template-columns:1fr;gap:20px}.inner-page .inner-item{padding:20px}.inner-page .inner-image-grid img{height:280px}.inner-page a.source-booking{font-size:14px}.inner-reading-page .inner-band-content h2{font-size:29px}.inner-page img{max-height:380px}.inner-page .inner-band-content{min-width:0}}
 @media(max-width:430px){.inner-page .inner-facts-grid,.inner-page .inner-stats-grid{grid-template-columns:1fr}.inner-page .inner-key-value{gap:14px}}
+
+/* Premium polish layer — keeps imported pages aligned with the bespoke homepage system. */
+
+/* Inner bands share the same left edge as the header, breadcrumb and hero. */
+.inner-page .inner-band-content{max-width:1280px}
+.inner-reading-page .inner-band-content{max-width:900px}
+
+/* Hero eyebrow matches the homepage `.eyebrow` treatment. */
+.inner-page .page-hero-copy>span:first-child{display:inline-flex;align-items:center;gap:10px;font-size:12px;letter-spacing:.09em;margin-bottom:2px}
+.inner-page .page-hero-copy>span:first-child::before{content:'';flex:none;width:6px;height:6px;border-radius:50%;background:#6f7f97}
+
+/* Hero meta row (category · date · read time). */
+.inner-page .page-hero-copy>div:has(>span){gap:8px 10px;align-items:center;font-size:13px;font-weight:650;color:#5a6a82;margin:0 0 4px}
+.inner-page .page-hero-copy>div:has(>span)>span:first-child{color:var(--primary);text-transform:uppercase;letter-spacing:.09em;font-weight:750;font-size:11.5px}
+.inner-page .page-hero-copy>div:has(>span)>span+span{position:relative;padding-left:16px}
+.inner-page .page-hero-copy>div:has(>span)>span+span::before{content:'';position:absolute;left:0;top:50%;width:4px;height:4px;border-radius:50%;background:#aab8cd;transform:translateY(-50%)}
+
+/* Bare hero links: back link and outbound utility links. */
+.inner-page .page-hero-copy>a:not(.source-booking){display:inline-flex;align-items:center;gap:9px;font-size:12.5px;font-weight:750;letter-spacing:.07em;color:var(--primary);text-decoration:none;text-underline-offset:0}
+.inner-page .page-hero-copy>a:first-child{margin-bottom:18px}
+.inner-page .page-hero-copy>a:first-child::before{content:'';flex:none;width:7px;height:7px;border-top:2px solid currentColor;border-left:2px solid currentColor;transform:rotate(-45deg);transition:transform .2s}
+.inner-page .page-hero-copy>a:first-child:hover::before{transform:rotate(-45deg) translate(-2px,-2px)}
+.inner-page .page-hero-copy>a:not(.source-booking):not(:first-child){margin-bottom:6px;padding-bottom:6px;border-bottom:1px solid #b9c9de}
+.inner-page .page-hero-copy>a:not(.source-booking):not(:first-child)::after{content:'';flex:none;width:7px;height:7px;border-top:2px solid currentColor;border-right:2px solid currentColor;transform:rotate(45deg);transition:transform .2s}
+.inner-page .page-hero-copy>a:not(.source-booking):not(:first-child):hover::after{transform:rotate(45deg) translate(2px,-2px)}
+
+/* Trust line and finance disclaimer that follow the hero button row. */
+.inner-page .page-hero-copy>div:has(>a.source-booking)>a:not(.source-booking){display:inline-flex;align-items:center;gap:9px;padding-bottom:6px;border-bottom:1px solid #b9c9de;font-size:15px;font-weight:700;color:var(--primary);text-decoration:none}
+.inner-page .page-hero-copy>div:has(>a.source-booking)>a:not(.source-booking):hover{border-color:var(--primary)}
+.inner-page .page-hero-copy>div:has(>a.source-booking)+p{display:inline-block;margin:6px 0 0;padding:11px 20px;border:1px solid var(--line);border-radius:999px;background:#fff;font-size:13.5px;line-height:1.6;font-weight:650;color:var(--primary);max-width:none}
+.inner-page .page-hero-copy>div:has(>a.source-booking)+p+p{font-size:12.5px;line-height:1.75;color:#6b7a91;max-width:760px;margin-top:18px}
+
+/* Article byline. */
+.inner-reading-page .page-hero-copy>div:last-child{display:flex;align-items:center;gap:14px;margin-top:28px;padding-top:22px;border-top:1px solid #d5dfee}
+.inner-reading-page .page-hero-copy>div:last-child>div:empty{display:none}
+.inner-reading-page .page-hero-copy>div:last-child>div:not(:empty){display:flex;flex-direction:column;gap:3px}
+.inner-reading-page .page-hero-copy>div:last-child p{margin:0;max-width:none}
+.inner-reading-page .page-hero-copy>div:last-child p:first-child{font-size:11px;font-weight:750;letter-spacing:.11em;text-transform:uppercase;color:#6f7f97}
+.inner-reading-page .page-hero-copy>div:last-child p:last-child{font-size:16px;font-weight:650;color:var(--ink)}
+
+/* Section eyebrow that precedes a band heading. */
+.inner-page .inner-band-content span:has(+h2),.inner-page .inner-band-content span:has(+h3){display:inline-flex;align-items:center;gap:10px;margin-bottom:14px;text-transform:uppercase;letter-spacing:.09em;font-size:11.5px;font-weight:750;color:var(--primary)}
+.inner-page .inner-band-content span:has(+h2)::before{content:'';flex:none;width:6px;height:6px;border-radius:50%;background:#6f7f97}
+.inner-page .inner-item span:has(+h3){margin-bottom:10px;color:#6f7f97}
+
+/* Card badge — reserve the same space on unbadged siblings so headings stay aligned. */
+.inner-page .inner-item>div:first-child:has(+div>h3){display:inline-flex;align-items:center;height:28px;padding:0 14px;border-radius:999px;background:var(--primary);color:#fff;font-size:10.5px;font-weight:750;letter-spacing:.11em;text-transform:uppercase;margin-bottom:18px}
+.inner-page .inner-grid:has(>.inner-item>div:first-child+div>h3)>.inner-item:not(:has(>div:first-child+div>h3))::before{content:'';display:block;height:28px;margin-bottom:18px}
+.inner-page .inner-grid>.inner-item:has(>div:first-child+div>h3){border-color:#b9c9de;box-shadow:0 10px 30px #1024401a}
+
+/* Card price line directly under the card heading. */
+.inner-page .inner-item>div>h3+div{font-family:var(--serif);font-size:31px;line-height:1.2;color:var(--primary);margin:10px 0 6px}
+
+/* Trailing "Learn More" / "Read More" links inside cards and profiles. */
+.inner-page .inner-item>a:last-child,.inner-page .inner-profile>div>a:last-child:not(.source-booking){display:inline-flex;align-items:center;gap:10px;margin-top:20px;padding-bottom:7px;border-bottom:1px solid #b9c9de;font-size:14px;font-weight:700;color:var(--primary);text-decoration:none;transition:border-color .2s}
+.inner-page .inner-item>a:last-child::after,.inner-page .inner-profile>div>a:last-child:not(.source-booking)::after{content:'';flex:none;width:7px;height:7px;border-top:2px solid currentColor;border-right:2px solid currentColor;transform:rotate(45deg);transition:transform .2s}
+.inner-page .inner-item>a:last-child:hover,.inner-page .inner-profile>div>a:last-child:not(.source-booking):hover{border-color:var(--primary)}
+.inner-page .inner-item>a:last-child:hover::after,.inner-page .inner-profile>div>a:last-child:not(.source-booking):hover::after{transform:rotate(45deg) translate(2px,-2px)}
+
+/* FAQ accordions get the same chevron affordance as the table of contents. */
+.inner-page details:not(.inner-page-navigation details) summary{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;list-style:none;font-size:17px;color:var(--ink)}
+.inner-page details:not(.inner-page-navigation details) summary::-webkit-details-marker{display:none}
+.inner-page details:not(.inner-page-navigation details) summary::after{content:'';flex:none;width:9px;height:9px;margin-top:8px;border-right:2px solid var(--primary);border-bottom:2px solid var(--primary);transform:rotate(45deg);transition:transform .2s}
+.inner-page details[open]:not(.inner-page-navigation details) summary::after{margin-top:12px;transform:rotate(-135deg)}
+
+/* Linked headings read as headings, not as inline body links. */
+.inner-page .inner-band-content h2>a,.inner-page .inner-band-content h3>a{color:inherit;text-decoration:none;transition:color .2s}
+.inner-page .inner-band-content h2>a:hover,.inner-page .inner-band-content h3>a:hover{color:var(--primary)}
+
+/* Optically centre list markers on the first line of text. */
+.inner-page .inner-band-content ul:not(.inner-hours-list)>li::before{top:calc(.9em - 3px)}
+
+/* Profile credentials block. */
+.inner-page .inner-profile>div:first-child p{color:#5a6a82;line-height:1.65}
+.inner-page .inner-profile>div:first-child>div>div>p:first-child{font-weight:750;letter-spacing:.09em;text-transform:uppercase;font-size:11.5px;color:var(--primary)}
+
+/* Blog cards: keep titles to a predictable depth so excerpts line up. */
+.inner-page .inner-blog-grid .inner-item h2{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+
+@media(max-width:700px){
+.inner-page .page-hero-copy>div:has(>a.source-booking)+p{display:block;border-radius:12px;padding:12px 16px;font-size:13px}
+.inner-page .inner-item>div>h3+div{font-size:27px}
+.inner-page .inner-grid:has(>.inner-item>div:first-child+div>h3)>.inner-item:not(:has(>div:first-child+div>h3))::before{display:none}
+}

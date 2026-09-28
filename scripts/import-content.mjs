@@ -26,6 +26,30 @@ async function importPage(url) {
   const root = main.length ? main : document('body')
   const title = root.find('h1').first().text().trim()
   if (!title) throw new Error(`Missing title: ${url}`)
+  const meta = name => document(`meta[name="${name}"]`).attr('content') || ''
+  const property = name => document(`meta[property="${name}"]`).attr('content') || ''
+  const seo = {
+    canonical: document('link[rel="canonical"]').attr('href') || '',
+    keywords: meta('keywords'),
+    robots: meta('robots'),
+    author: meta('author'),
+    ogTitle: property('og:title'),
+    ogDescription: property('og:description'),
+    ogUrl: property('og:url'),
+    ogSiteName: property('og:site_name'),
+    ogType: property('og:type'),
+    ogImage: property('og:image'),
+    ogImageWidth: property('og:image:width'),
+    ogImageHeight: property('og:image:height'),
+    ogImageAlt: property('og:image:alt'),
+    publishedTime: property('article:published_time'),
+    articleAuthor: property('article:author'),
+    twitterCard: meta('twitter:card'),
+    twitterTitle: meta('twitter:title'),
+    twitterDescription: meta('twitter:description'),
+    twitterImage: meta('twitter:image'),
+  }
+  const schema = document('script[type="application/ld+json"]').map((index, element) => document(element).text().trim()).get()
   const images = root.find('img').map((index, element) => ({ src: absolute(document(element).attr('src')), alt: document(element).attr('alt') || '' })).get()
   const media = [...new Set(source.match(/https:\/\/res\.cloudinary\.com\/[^\s"<>\\]+/g) || [])]
   const sections = root.find('section').map((index, element) => ({ title: document(element).find('h2').first().text().trim(), text: document(element).text().replace(/\s+/g, ' ').trim() })).get()
@@ -51,7 +75,7 @@ async function importPage(url) {
       else node.replaceWith(node.contents())
     }
   })
-  pages.push({ path: new URL(url).pathname.replace(/\/$/, '') || '/', title, seoTitle: document('title').text(), description: document('meta[name="description"]').attr('content') || '', images, media, sections, html: root.html(), source: url })
+  pages.push({ path: new URL(url).pathname.replace(/\/$/, '') || '/', title, seoTitle: document('title').text(), description: document('meta[name="description"]').attr('content') || '', seo, schema, images, media, sections, html: root.html(), source: url })
   console.log(`Imported ${new URL(url).pathname}: ${images.length} images`)
 }
 
