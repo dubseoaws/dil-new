@@ -7,6 +7,8 @@ import { ArrowRight, ArrowUpRight, ChevronDown, MapPin, Menu, Phone, X } from 'l
 import { treatmentMenu } from '../data/treatments'
 import { Brand, Button } from './ui'
 
+
+//All done
 export function Header() {
   const pathname = usePathname()
   const [openedAt, setOpenedAt] = useState<string | null>(null)
