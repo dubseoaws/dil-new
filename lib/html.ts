@@ -19,6 +19,23 @@ const deadImages = [
 // Every transform below runs at build time, so imported markup ships as static HTML instead of being parsed in the browser.
 const parse = (html: string) => new JSDOM(`<!doctype html><html><body>${html}</body></html>`).window.document
 
+const faqKey = (question: string) => question.replace(/[\u2018\u2019']/g, '').replace(/\s+/g, ' ').trim().toLowerCase()
+
+// Answers only exist in the FAQPage schema, because live keeps its accordion panels collapsed in the markup.
+export function faqAnswers(schema: string[] = []): Record<string, string> {
+  const answers: Record<string, string> = {}
+  for (const entry of schema) {
+    let parsed: unknown
+    try { parsed = JSON.parse(entry) } catch { continue }
+    const data = parsed as { '@type'?: string; mainEntity?: { name?: string; acceptedAnswer?: { text?: string } }[] }
+    if (data['@type'] !== 'FAQPage' || !Array.isArray(data.mainEntity)) continue
+    for (const item of data.mainEntity) {
+      if (item.name && item.acceptedAnswer?.text) answers[faqKey(item.name)] = item.acceptedAnswer.text
+    }
+  }
+  return answers
+}
+
 export function localBookingHtml(html: string) {
   const document = parse(html)
   document.querySelectorAll('a[href]').forEach(link => {
@@ -39,7 +56,7 @@ export type InnerContent = {
   headings: { id: string; title: string }[]
 }
 
-export function innerPageContent(html: string, path: string): InnerContent {
+export function innerPageContent(html: string, path: string, faqs: Record<string, string> = {}): InnerContent {
   const document = parse(html)
   const textNodes = document.createTreeWalker(document.body, SHOW_TEXT)
   while (textNodes.nextNode()) textNodes.currentNode.textContent = textNodes.currentNode.textContent?.replace(/\\u(201[3489cd]|00b7|2713)/gi, (_match, code: string) => String.fromCharCode(parseInt(code, 16))) || ''
@@ -113,7 +130,7 @@ export function innerPageContent(html: string, path: string): InnerContent {
       return
     }
     if (isBlogArticle) return
-    if (!element.closest('.inner-item') && children.length >= 3 && children.every(child => ['DIV', 'SPAN'].includes(child.tagName) && !child.querySelector('h2,h3,h4,img,a,ul,ol') && !child.textContent?.includes('?') && (child.textContent?.trim().length || 0) > 0 && (child.textContent?.trim().length || 0) < 180)) {
+    if (!element.closest('.inner-item') && children.length >= 3 && children.every(child => ['DIV', 'SPAN'].includes(child.tagName) && !child.querySelector('h2,h3,h4,img,ul,ol') && !child.querySelector('a:not([href^="tel:"]):not([href^="mailto:"])') && !child.textContent?.includes('?') && (child.textContent?.trim().length || 0) > 0 && (child.textContent?.trim().length || 0) < 180)) {
       element.classList.add('inner-facts-grid')
       if (children.every(child => /^[\s\d£%]|^from /i.test(child.textContent || ''))) element.classList.add('inner-stats-grid')
     }
@@ -142,6 +159,35 @@ export function innerPageContent(html: string, path: string): InnerContent {
       item.classList.add('inner-key-value')
       item.parentElement?.classList.add('inner-hours-list')
     }
+  })
+  // Live renders FAQs as a collapsed accordion, so the snapshot only holds the questions; answers come from the page's FAQPage schema.
+  document.querySelectorAll('div').forEach(element => {
+    const children = Array.from(element.children)
+    if (children.length < 3 || !children.every(child => child.tagName === 'DIV' && child.children.length === 1 && ['SPAN', 'A'].includes(child.firstElementChild!.tagName) && child.textContent?.trim().endsWith('?'))) return
+    element.classList.add('inner-faq-list')
+    children.forEach(child => {
+      const question = child.textContent?.trim() || ''
+      const answer = faqs[faqKey(question)]
+      if (!answer) return
+      const details = document.createElement('details')
+      details.className = 'inner-faq'
+      const summary = document.createElement('summary')
+      summary.textContent = question
+      const paragraph = document.createElement('p')
+      paragraph.textContent = answer
+      details.append(summary, paragraph)
+      child.replaceWith(details)
+    })
+  })
+  // Closing "book an appointment" blocks arrive as a bare heading, copy and link row, so give them a band treatment.
+  document.querySelectorAll('div').forEach(element => {
+    const children = Array.from(element.children)
+    const actions = children[children.length - 1]
+    if (children.length < 3 || children[0].tagName !== 'H2' || !actions || actions.tagName !== 'DIV') return
+    if (!children.slice(1, -1).every(child => child.tagName === 'P')) return
+    if (!actions.querySelector(':scope > a.source-booking') || !Array.from(actions.children).every(child => child.tagName === 'A')) return
+    element.classList.add('inner-cta')
+    actions.classList.add('inner-cta-actions')
   })
   document.querySelectorAll('.inner-grid').forEach(grid => {
     if (grid.querySelector('.inner-comparison-pair')) {

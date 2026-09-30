@@ -1,0 +1,313 @@
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+
+/* Shared "Harley Street Precision" design system for the bespoke treatment pages
+   (/mini-dental-implants, /full-arch-implant-bridge). Tokens mirror the approved design spec. */
+.hsp {
+  --hsp-surface: #f9f9ff;
+  --hsp-lowest: #ffffff;
+  --hsp-low: #f0f3ff;
+  --hsp-container: #e7eeff;
+  --hsp-high: #dee8ff;
+  --hsp-variant: #d8e3fb;
+  --hsp-on-surface-variant: #43474c;
+  --hsp-outline: #74777d;
+  --hsp-outline-variant: #c4c6cd;
+  --hsp-primary: #000e1d;
+  --hsp-primary-container: #0f2438;
+  --hsp-secondary: #006398;
+  --hsp-secondary-container: #5bb8fe;
+  --hsp-porcelain: #f8fafc;
+  --hsp-clinical: #f1f5f9;
+  --hsp-border: #e2e8f0;
+  --hsp-cqc: #0d9488;
+  --hsp-champagne: #f9f6f0;
+  --hsp-serif: 'EB Garamond', Georgia, serif;
+  --hsp-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-family: var(--hsp-sans);
+  color: var(--hsp-primary);
+  display: block;
+}
+
+.hsp *, .hsp *::before, .hsp *::after { box-sizing: border-box; }
+.hsp p { margin: 0; }
+.hsp img { display: block; max-width: 100%; }
+.hsp a { color: inherit; text-decoration: none; }
+
+.hsp-container { width: 100%; max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+.hsp-container-narrow { max-width: 896px; }
+.hsp-section { padding: 80px 0; }
+.hsp-bg-surface { background: var(--hsp-surface); }
+.hsp-bg-low { background: var(--hsp-low); }
+.hsp-bg-clinical { background: var(--hsp-clinical); }
+.hsp-bg-porcelain { background: var(--hsp-porcelain); }
+
+/* Typography scale */
+.hsp h1 { font-family: var(--hsp-serif); font-size: 56px; font-weight: 600; line-height: 1.08; letter-spacing: -.02em; margin: 0 0 24px; color: var(--hsp-primary); }
+.hsp h2 { font-family: var(--hsp-serif); font-size: 40px; font-weight: 500; line-height: 1.2; letter-spacing: -.015em; margin: 0; color: var(--hsp-primary); }
+.hsp h3 { font-family: var(--hsp-sans); font-size: 20px; font-weight: 600; line-height: 1.4; margin: 0; color: var(--hsp-primary); }
+.hsp-lead { font-size: 18px; line-height: 28px; color: var(--hsp-on-surface-variant); }
+
+.hsp-eyebrow { display: block; font-size: 11px; font-weight: 700; line-height: 14px; letter-spacing: .06em; text-transform: uppercase; color: var(--hsp-secondary); }
+.hsp-overline { display: block; font-size: 12px; font-weight: 600; line-height: 16px; letter-spacing: .04em; text-transform: uppercase; color: var(--hsp-outline); }
+
+.hsp-eyebrow-pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 4px; background: var(--hsp-high); color: var(--hsp-secondary); font-size: 11px; font-weight: 700; line-height: 14px; letter-spacing: .06em; text-transform: uppercase; }
+.hsp-eyebrow-pill i { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.hsp-eyebrow-pill-dark { background: rgba(255, 255, 255, .1); color: var(--hsp-secondary-container); border: 1px solid rgba(91, 184, 254, .2); }
+.hsp-eyebrow-pill-round { border-radius: 999px; padding: 6px 14px; }
+
+/* Buttons */
+.hsp .hsp-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 14px 24px; border-radius: 8px; font-size: 14px; font-weight: 600; letter-spacing: .02em; line-height: 20px; border: 0; cursor: pointer; transition: background .2s, color .2s, box-shadow .2s; }
+.hsp .hsp-btn svg { flex-shrink: 0; }
+.hsp .hsp-btn-light { background: var(--hsp-lowest); color: var(--hsp-primary); box-shadow: 0 1px 2px rgba(15, 36, 56, .1); }
+.hsp .hsp-btn-light:hover { background: var(--hsp-surface); box-shadow: 0 4px 10px rgba(15, 36, 56, .14); }
+.hsp .hsp-btn-light svg { color: var(--hsp-secondary); }
+.hsp .hsp-btn-dark { background: var(--hsp-primary-container); color: #fff; padding: 14px 28px; box-shadow: 0 4px 10px rgba(15, 36, 56, .18); }
+.hsp .hsp-btn-dark:hover { background: var(--hsp-secondary); }
+.hsp .hsp-btn-accent { background: var(--hsp-secondary); color: #fff; padding: 14px 28px; box-shadow: 0 4px 10px rgba(0, 99, 152, .3); }
+.hsp .hsp-btn-accent:hover { background: var(--hsp-secondary-container); color: #00476e; }
+.hsp .hsp-btn-accent svg { color: var(--hsp-secondary-container); }
+.hsp .hsp-btn-accent:hover svg { color: #00476e; }
+.hsp .hsp-btn-ghost { background: none; color: var(--hsp-primary); padding: 14px 20px; }
+.hsp .hsp-btn-ghost svg { color: var(--hsp-secondary); }
+.hsp .hsp-btn-ghost:hover { color: var(--hsp-secondary); }
+.hsp .hsp-btn-outline { background: rgba(255, 255, 255, .1); color: #fff; border: 1px solid rgba(226, 232, 240, .2); }
+.hsp .hsp-btn-outline svg { color: var(--hsp-secondary-container); }
+.hsp .hsp-btn-outline:hover { color: var(--hsp-secondary-container); }
+.hsp .hsp-btn-block { width: 100%; }
+
+.hsp-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
+.hsp-actions-centre { justify-content: center; }
+
+.hsp .hsp-text-link { display: inline-flex; align-items: center; gap: 8px; color: var(--hsp-secondary); font-size: 14px; font-weight: 600; letter-spacing: .02em; }
+.hsp .hsp-text-link:hover { text-decoration: underline; }
+
+/* 1. Hero */
+.hsp-hero { position: relative; overflow: hidden; background: var(--hsp-porcelain); padding: 64px 0; }
+.hsp-hero-glow { position: absolute; top: -128px; right: -128px; width: 384px; height: 384px; border-radius: 50%; background: rgba(0, 99, 152, .05); filter: blur(64px); pointer-events: none; }
+.hsp-hero-grid { position: relative; display: grid; grid-template-columns: 7fr 5fr; gap: 64px; align-items: start; }
+.hsp-hero-copy { display: flex; flex-direction: column; align-items: flex-start; }
+.hsp-hero-copy .hsp-eyebrow-pill { margin-bottom: 24px; }
+.hsp-hero-copy .hsp-lead { margin-bottom: 32px; max-width: 576px; }
+.hsp-hero-copy .hsp-actions { margin-bottom: 24px; }
+.hsp-hero-note { display: flex; align-items: center; gap: 8px; padding-top: 8px; font-size: 12px; font-weight: 600; letter-spacing: .04em; color: var(--hsp-outline); }
+.hsp-hero-note svg { color: var(--hsp-cqc); flex-shrink: 0; }
+
+.hsp-price-panel { background: var(--hsp-primary); color: #fff; padding: 32px; border-radius: 12px; border: 1px solid rgba(226, 232, 240, .1); box-shadow: 0 25px 50px -12px rgba(0, 14, 29, .5); }
+.hsp-price-panel .hsp-eyebrow-pill { margin-bottom: 24px; }
+.hsp-price-panel-note { font-size: 13px; line-height: 20px; color: rgba(216, 227, 251, .8); background: rgba(255, 255, 255, .05); border: 1px solid rgba(226, 232, 240, .1); padding: 16px; border-radius: 8px; margin-bottom: 24px; }
+.hsp-price-panel-figure { padding: 24px; background: rgba(255, 255, 255, .05); border: 1px solid rgba(226, 232, 240, .1); border-radius: 8px; margin-bottom: 24px; }
+.hsp-price-panel-figure .hsp-overline { color: rgba(216, 227, 251, .7); }
+.hsp-price-panel-figure strong { display: block; margin-top: 4px; font-size: 24px; font-weight: 700; line-height: 32px; letter-spacing: -.01em; color: #fff; }
+.hsp-price-panel-figure em { display: block; margin-top: 4px; font-size: 13px; line-height: 20px; font-weight: 600; font-style: normal; color: var(--hsp-secondary-container); }
+.hsp-price-panel .hsp-btn { padding: 16px 24px; font-weight: 700; }
+
+/* 1b. Hero clinical-highlights card (light variant) */
+.hsp-highlight-card { background: var(--hsp-lowest); border: 1px solid var(--hsp-border); border-radius: 12px; padding: 32px; box-shadow: 0 24px 48px -12px rgba(15, 36, 56, .18); display: flex; flex-direction: column; gap: 24px; }
+.hsp-highlight-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
+.hsp-highlight-figure strong { display: block; margin-top: 4px; font-family: var(--hsp-serif); font-size: 40px; font-weight: 600; line-height: 48px; letter-spacing: -.015em; color: var(--hsp-primary-container); }
+.hsp-highlight-list { display: flex; flex-direction: column; gap: 16px; background: var(--hsp-porcelain); border-radius: 8px; padding: 20px; }
+.hsp-highlight { display: flex; align-items: flex-start; gap: 12px; }
+.hsp-highlight > svg { color: var(--hsp-secondary); flex-shrink: 0; margin-top: 2px; }
+.hsp-highlight strong { display: block; font-size: 14px; font-weight: 600; line-height: 20px; letter-spacing: .02em; color: var(--hsp-primary-container); }
+.hsp-highlight em { display: block; margin-top: 2px; font-size: 13px; line-height: 20px; font-style: normal; color: var(--hsp-on-surface-variant); }
+
+/* Shared section heading */
+.hsp-heading { max-width: 768px; display: flex; flex-direction: column; gap: 16px; }
+.hsp-heading > h2 { margin-top: 8px; }
+.hsp-heading p { font-size: 15px; line-height: 24px; color: var(--hsp-on-surface-variant); }
+.hsp-heading p a { color: var(--hsp-secondary); text-decoration: underline; text-underline-offset: 3px; }
+.hsp-heading-centre { max-width: 768px; margin: 0 auto; text-align: center; align-items: center; }
+.hsp-heading-row { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px; margin-bottom: 48px; }
+.hsp-heading-row .hsp-heading { margin-bottom: 0; }
+.hsp-section .hsp-heading + .hsp-grid-3,
+.hsp-section .hsp-heading + .hsp-grid-4,
+.hsp-section .hsp-heading + .hsp-grid-2,
+.hsp-section .hsp-heading + .hsp-benefits,
+.hsp-section .hsp-heading + .hsp-table-wrap,
+.hsp-section .hsp-heading + .hsp-faqs { margin-top: 48px; }
+
+/* 2 / 7 / 9. Split layouts */
+.hsp-split { display: grid; grid-template-columns: 7fr 5fr; gap: 48px; align-items: center; }
+.hsp-split-even { grid-template-columns: 1fr 1fr; }
+.hsp-split-copy { display: flex; flex-direction: column; gap: 24px; }
+.hsp-split-copy p { font-size: 15px; line-height: 24px; color: var(--hsp-on-surface-variant); }
+.hsp-split-copy p a { color: var(--hsp-secondary); text-decoration: underline; text-underline-offset: 3px; }
+.hsp-split-copy .hsp-eyebrow-pill { align-self: flex-start; }
+.hsp-split-copy .hsp-actions { margin-top: 8px; }
+
+.hsp-spec-card { background: var(--hsp-low); border-radius: 12px; padding: 32px; box-shadow: 0 1px 2px rgba(15, 36, 56, .06); display: flex; flex-direction: column; gap: 24px; }
+.hsp-spec-head { display: flex; align-items: center; justify-content: space-between; color: var(--hsp-secondary); }
+.hsp-spec-list { display: flex; flex-direction: column; gap: 16px; }
+.hsp-spec { background: var(--hsp-lowest); padding: 16px; border-radius: 8px; box-shadow: 0 1px 2px rgba(15, 36, 56, .06); }
+.hsp-spec strong { display: block; margin-top: 4px; font-size: 20px; font-weight: 600; line-height: 28px; }
+.hsp-spec p { margin-top: 4px; font-size: 13px; line-height: 20px; color: var(--hsp-on-surface-variant); }
+.hsp-spec-note { font-size: 13px; line-height: 20px; color: var(--hsp-on-surface-variant); background: var(--hsp-champagne); padding: 16px; border-radius: 8px; }
+.hsp-spec-head h3 { font-size: 20px; font-weight: 600; line-height: 28px; }
+.hsp-spec-head small { display: block; margin-top: 2px; font-size: 13px; line-height: 20px; color: var(--hsp-outline); }
+.hsp-spec-head .hsp-card-icon { margin-bottom: 0; }
+.hsp-spec-card .hsp-spec-head { justify-content: flex-start; gap: 12px; }
+.hsp-metrics { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+.hsp-metric { background: var(--hsp-lowest); padding: 16px; border-radius: 8px; box-shadow: 0 1px 2px rgba(15, 36, 56, .06); }
+.hsp-metric strong { display: block; margin-top: 4px; font-size: 24px; font-weight: 700; line-height: 32px; letter-spacing: -.01em; color: var(--hsp-secondary); }
+.hsp-metric:last-child strong { color: var(--hsp-primary-container); }
+.hsp-metric p { margin-top: 4px; font-size: 13px; line-height: 20px; color: var(--hsp-on-surface-variant); }
+.hsp-spec-note:has(svg) { display: flex; align-items: flex-start; gap: 10px; background: var(--hsp-clinical); }
+.hsp-spec-note svg { color: var(--hsp-secondary); flex-shrink: 0; margin-top: 1px; }
+
+/* Card grids */
+.hsp-grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px; }
+.hsp-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.hsp-grid-steps { gap: 32px; }
+.hsp-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+
+.hsp-card { background: var(--hsp-lowest); padding: 32px; border-radius: 12px; box-shadow: 0 1px 2px rgba(15, 36, 56, .06); display: flex; flex-direction: column; align-items: flex-start; transition: box-shadow .2s; }
+.hsp-card:hover { box-shadow: 0 8px 18px rgba(15, 36, 56, .1); }
+.hsp-card h3 { margin-bottom: 8px; }
+.hsp-card p { font-size: 13px; line-height: 20px; color: var(--hsp-on-surface-variant); }
+.hsp-card-quiet { background: var(--hsp-low); padding: 24px; }
+.hsp-card-icon { width: 48px; height: 48px; border-radius: 8px; background: var(--hsp-high); color: var(--hsp-secondary); display: grid; place-items: center; margin-bottom: 24px; flex-shrink: 0; }
+.hsp-card-icon-sm { width: 40px; height: 40px; margin-bottom: 16px; }
+
+.hsp-step p { font-size: 15px; line-height: 24px; }
+.hsp-step-head { display: flex; align-items: center; justify-content: space-between; width: 100%; margin-bottom: 16px; }
+.hsp-step-head svg { color: var(--hsp-outline-variant); }
+.hsp-step-head .hsp-step-number { margin-bottom: 0; }
+.hsp-step-number { font-family: var(--hsp-serif); font-size: 56px; font-weight: 600; line-height: 64px; letter-spacing: -.02em; color: rgba(216, 227, 251, .75); margin-bottom: 16px; transition: color .2s; }
+.hsp-step:hover .hsp-step-number { color: var(--hsp-secondary-container); }
+
+.hsp-benefits { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.hsp-benefit { background: var(--hsp-lowest); padding: 24px; border-radius: 12px; box-shadow: 0 1px 2px rgba(15, 36, 56, .06); display: flex; align-items: flex-start; gap: 16px; }
+.hsp-benefit .hsp-card-icon { margin-bottom: 0; }
+
+/* 6. Comparison table */
+.hsp-table-wrap { overflow: hidden; border-radius: 12px; background: var(--hsp-lowest); box-shadow: 0 4px 14px rgba(15, 36, 56, .1); }
+.hsp-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 15px; line-height: 24px; }
+.hsp-table th { background: var(--hsp-primary); color: #fff; padding: 16px 24px; font-size: 14px; font-weight: 600; letter-spacing: .02em; }
+.hsp-table th.hsp-table-highlight { background: var(--hsp-primary-container); color: var(--hsp-secondary-container); }
+.hsp-table td { padding: 16px 24px; color: var(--hsp-on-surface-variant); }
+.hsp-table td:first-child { font-weight: 600; color: var(--hsp-primary); }
+.hsp-table td.hsp-table-highlight { font-weight: 500; color: var(--hsp-secondary); background: rgba(240, 243, 255, .4); }
+.hsp-table tbody tr:nth-child(even) { background: rgba(240, 243, 255, .2); }
+.hsp-table tbody tr:hover { background: var(--hsp-low); }
+
+/* 7. Cost card */
+.hsp-cost-card { background: #fff; padding: 32px; border-radius: 12px; border: 1px solid var(--hsp-border); box-shadow: 0 1px 2px rgba(15, 36, 56, .06); display: flex; flex-direction: column; gap: 24px; }
+.hsp-cost-card-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
+.hsp-chip { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 4px; background: var(--hsp-container); color: var(--hsp-secondary); font-size: 12px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+.hsp-chip-outline { background: var(--hsp-clinical); border: 1px solid var(--hsp-border); font-weight: 600; }
+.hsp-chip-outline svg { color: var(--hsp-cqc); }
+.hsp-cost-card-note { font-size: 12px; line-height: 20px; color: var(--hsp-on-surface-variant); }
+.hsp-cost-card-figure { padding: 20px; border-radius: 8px; background: var(--hsp-low); border: 1px solid rgba(0, 99, 152, .2); }
+.hsp-cost-card-figure strong { display: block; margin-top: 4px; font-family: var(--hsp-serif); font-size: 24px; font-weight: 700; line-height: 32px; color: var(--hsp-primary); }
+.hsp-cost-card-figure em { display: block; margin-top: 4px; font-size: 12px; font-weight: 500; font-style: normal; color: var(--hsp-secondary); }
+
+/* 9. Location card */
+.hsp-locate-card { background: var(--hsp-lowest); border-radius: 12px; padding: 32px; box-shadow: 0 4px 14px rgba(15, 36, 56, .1); display: flex; flex-direction: column; gap: 16px; align-items: flex-start; }
+.hsp-locate-card h3 { font-size: 24px; font-weight: 700; line-height: 32px; letter-spacing: -.01em; }
+.hsp-locate-row { display: flex; align-items: flex-start; gap: 12px; font-size: 13px; line-height: 20px; color: var(--hsp-on-surface-variant); }
+.hsp-locate-row svg { color: var(--hsp-secondary); flex-shrink: 0; margin-top: 2px; }
+
+/* 10. Team */
+.hsp .hsp-dentist { background: var(--hsp-lowest); border-radius: 12px; overflow: hidden; box-shadow: 0 1px 2px rgba(15, 36, 56, .06); display: flex; flex-direction: column; transition: box-shadow .2s; }
+.hsp .hsp-dentist:hover { box-shadow: 0 8px 18px rgba(15, 36, 56, .12); }
+.hsp-dentist-photo { display: block; aspect-ratio: 3 / 4; background: var(--hsp-high); overflow: hidden; }
+.hsp-dentist-photo img { width: 100%; height: 100%; object-fit: cover; object-position: top; transition: transform .3s; }
+.hsp-dentist:hover .hsp-dentist-photo img { transform: scale(1.05); }
+.hsp-dentist-info { display: flex; flex-direction: column; flex: 1; padding: 20px; }
+.hsp-dentist-info em { margin-top: 2px; font-size: 13px; line-height: 20px; font-style: normal; font-weight: 500; color: var(--hsp-secondary); }
+.hsp-dentist-info small { margin-top: auto; padding-top: 12px; display: flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--hsp-outline); }
+
+/* 11. Reviews */
+.hsp-stars { display: inline-flex; align-items: center; color: #f59e0b; }
+.hsp-rating { display: inline-flex; align-items: center; gap: 12px; background: var(--hsp-lowest); padding: 10px 16px; border-radius: 8px; box-shadow: 0 1px 2px rgba(15, 36, 56, .06); }
+.hsp-rating strong { font-size: 14px; font-weight: 700; letter-spacing: .02em; }
+.hsp-rating small { font-size: 13px; color: var(--hsp-outline); }
+.hsp-review { margin: 0; background: var(--hsp-lowest); padding: 24px; border-radius: 12px; box-shadow: 0 1px 2px rgba(15, 36, 56, .06); display: flex; flex-direction: column; gap: 16px; }
+.hsp-review blockquote { margin: 0; font-size: 15px; line-height: 24px; font-style: italic; color: var(--hsp-on-surface-variant); }
+.hsp-review figcaption { margin-top: auto; padding-top: 8px; font-size: 14px; font-weight: 600; letter-spacing: .02em; color: var(--hsp-primary); }
+.hsp-review figcaption small { display: block; margin-top: 2px; font-size: 13px; font-weight: 400; letter-spacing: 0; color: var(--hsp-outline); }
+.hsp-disclaimer { margin-top: 24px; text-align: center; font-size: 13px; line-height: 20px; color: var(--hsp-outline); }
+
+/* 12. Clinics */
+.hsp-clinic { background: var(--hsp-lowest); border-radius: 12px; padding: 32px; box-shadow: 0 4px 14px rgba(15, 36, 56, .1); display: flex; flex-direction: column; justify-content: space-between; gap: 32px; }
+.hsp-clinic > div:first-child { display: flex; flex-direction: column; gap: 16px; }
+.hsp-clinic p { font-size: 15px; line-height: 24px; color: var(--hsp-on-surface-variant); }
+.hsp-clinic-field { display: flex; flex-direction: column; gap: 4px; }
+.hsp-clinic-field a { font-size: 20px; font-weight: 600; line-height: 28px; color: var(--hsp-primary); }
+.hsp-clinic-field a:hover { color: var(--hsp-secondary); }
+.hsp-clinic-field p { font-size: 13px; line-height: 20px; }
+.hsp-clinic-actions { display: flex; align-items: center; gap: 16px; font-size: 14px; font-weight: 600; letter-spacing: .02em; }
+.hsp-clinic-actions a:first-child { color: var(--hsp-secondary); }
+.hsp-clinic-actions a:hover { text-decoration: underline; }
+.hsp-clinic-actions span { color: var(--hsp-outline-variant); }
+.hsp-clinic-actions a { display: inline-flex; align-items: center; gap: 6px; }
+.hsp-clinic-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
+.hsp-clinic-hours span { display: flex; justify-content: space-between; gap: 16px; font-size: 13px; line-height: 22px; color: var(--hsp-on-surface-variant); }
+.hsp-clinic-hours span i { font-style: normal; }
+.hsp-clinic-hours span b { font-weight: 500; }
+.hsp-clinic-hours { background: var(--hsp-porcelain); border-radius: 8px; padding: 16px; gap: 2px; }
+
+/* 13. FAQs */
+.hsp-faqs { display: flex; flex-direction: column; gap: 16px; }
+.hsp-faqs details { background: var(--hsp-lowest); border-radius: 12px; box-shadow: 0 1px 2px rgba(15, 36, 56, .06); transition: box-shadow .2s; }
+.hsp-faqs details[open] { box-shadow: 0 8px 18px rgba(15, 36, 56, .1); }
+.hsp-faqs summary { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 24px; cursor: pointer; user-select: none; font-size: 20px; font-weight: 600; line-height: 28px; list-style: none; }
+.hsp-faqs summary::-webkit-details-marker { display: none; }
+.hsp-faqs summary svg { color: var(--hsp-secondary); flex-shrink: 0; transition: transform .2s; }
+.hsp-faqs details[open] summary svg { transform: rotate(180deg); }
+.hsp-faqs details p { padding: 8px 24px 24px; font-size: 15px; line-height: 24px; color: var(--hsp-on-surface-variant); }
+
+/* 14. Closing CTA */
+.hsp-cta { position: relative; overflow: hidden; background: var(--hsp-primary); color: #fff; padding: 80px 0; }
+.hsp-cta-glow { position: absolute; top: -96px; left: 50%; transform: translateX(-50%); width: 700px; height: 384px; border-radius: 50%; background: rgba(0, 99, 152, .1); filter: blur(64px); pointer-events: none; }
+.hsp-cta .hsp-container { position: relative; z-index: 1; }
+.hsp-cta-panel { position: relative; overflow: hidden; background: var(--hsp-primary-container); border: 1px solid rgba(226, 232, 240, .1); border-radius: 16px; padding: 48px; box-shadow: 0 20px 40px rgba(0, 0, 0, .35); }
+.hsp-cta-halo { position: absolute; top: -80px; right: -80px; width: 320px; height: 320px; border-radius: 50%; background: rgba(0, 99, 152, .1); filter: blur(64px); pointer-events: none; }
+.hsp-cta-body { position: relative; z-index: 1; max-width: 768px; margin: 0 auto; text-align: center; }
+.hsp-cta-body .hsp-eyebrow-pill { margin-bottom: 24px; }
+.hsp-cta-body h2 { font-family: var(--hsp-serif); font-size: 44px; line-height: 52px; color: #fff; margin-bottom: 24px; }
+.hsp-cta-body > p { font-size: 18px; line-height: 28px; color: rgba(216, 227, 251, .8); margin: 0 auto 40px; max-width: 672px; }
+
+.hsp-related { position: relative; z-index: 1; margin-top: 64px; padding-top: 48px; border-top: 1px solid rgba(226, 232, 240, .1); }
+.hsp-related-rule { display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 32px; font-size: 12px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: rgba(216, 227, 251, .7); }
+.hsp-related-rule span { width: 80px; height: 1px; background: rgba(226, 232, 240, .2); }
+.hsp-related .hsp-grid-4 { max-width: 1024px; margin: 0 auto; gap: 16px; }
+.hsp .hsp-related-card { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 20px; background: rgba(255, 255, 255, .05); border: 1px solid rgba(226, 232, 240, .1); border-radius: 12px; transition: background .2s, border-color .2s; }
+.hsp .hsp-related-card:hover { background: rgba(255, 255, 255, .1); border-color: var(--hsp-secondary); }
+.hsp-related-card strong { display: block; font-size: 14px; font-weight: 600; letter-spacing: .02em; color: #fff; transition: color .2s; }
+.hsp-related-card em { display: block; margin-top: 2px; font-size: 13px; line-height: 20px; font-style: normal; color: rgba(216, 227, 251, .7); }
+.hsp-related-card svg { flex-shrink: 0; color: rgba(216, 227, 251, .6); transition: transform .2s, color .2s; }
+.hsp-related-card:hover strong, .hsp-related-card:hover svg { color: var(--hsp-secondary-container); }
+.hsp-related-card:hover svg { transform: translateX(4px); }
+
+/* Before & after cases */
+.hsp-case { margin: 0; background: var(--hsp-lowest); border: 1px solid var(--hsp-border); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 14px rgba(15, 36, 56, .1); }
+.hsp-case-photo { position: relative; display: block; aspect-ratio: 4 / 3; background: var(--hsp-high); overflow: hidden; }
+.hsp-case-photo img { width: 100%; height: 100%; object-fit: cover; }
+.hsp-case-tag { position: absolute; top: 12px; left: 12px; padding: 4px 10px; border-radius: 4px; background: rgba(15, 36, 56, .8); color: #fff; font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+.hsp-case figcaption { padding: 16px 20px; font-size: 13px; line-height: 20px; color: var(--hsp-on-surface-variant); }
+
+/* Hide the site-wide GDC/CQC strip, as on the other bespoke treatment pages. */
+main:has(.hsp) ~ .regulation { display: none; }
+
+@media (max-width: 1100px) {
+  .hsp-hero-grid, .hsp-split, .hsp-split-even { grid-template-columns: 1fr; gap: 40px; }
+  .hsp-grid-4 { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 900px) {
+  .hsp-section, .hsp-cta { padding: 56px 0; }
+  .hsp h1 { font-size: 36px; line-height: 44px; letter-spacing: -.01em; }
+  .hsp h2 { font-size: 28px; line-height: 36px; letter-spacing: 0; }
+  .hsp-cta-body h2 { font-size: 28px; line-height: 36px; }
+  .hsp-grid-3, .hsp-grid-2, .hsp-benefits { grid-template-columns: 1fr; }
+  .hsp-cta-panel { padding: 32px 24px; }
+  .hsp-related { margin-top: 40px; padding-top: 32px; }
+}
+
+@media (max-width: 640px) {
+  .hsp-grid-4 { grid-template-columns: 1fr; }
+  .hsp-hero, .hsp-price-panel, .hsp-card, .hsp-spec-card, .hsp-cost-card, .hsp-clinic, .hsp-locate-card { padding-left: 24px; padding-right: 24px; }
+  .hsp-actions .hsp-btn { flex: 1 1 100%; }
+  .hsp-heading-row { align-items: flex-start; }
+}

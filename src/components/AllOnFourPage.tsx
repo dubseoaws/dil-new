@@ -7,7 +7,7 @@ import { ClinicLocations } from './ClinicLocations'
 import { VideoCard } from './VideoCard'
 import { FaqSection, GoogleReviews, TeamSection } from './PageSections'
 
-const VIDEO = { id: 'mWMhRZo2E54', title: 'Watch: Full Mouth Dental Implants', caption: 'Dental Implants London · South Kensington & City' }
+const VIDEO = { id: '33u-MrdHaVU', title: 'Watch: Full Mouth Rehabilitation in London', caption: 'Dental Implants London · South Kensington & City' }
 const benefitIcons = [Lock, Anchor, Utensils, Smile, LayoutGrid, Sparkles]
 const reasonIcons = [MapPin, Award, ShieldCheck, MessageCircle, ClipboardList, HeartHandshake]
 

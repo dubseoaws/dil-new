@@ -5,7 +5,7 @@ import { BlogDirectory, type BlogEntry } from './BlogDirectory'
 
 const heroVideos: Record<string, { id: string; title: string }> = {
   '/single-tooth-implant': { id: 'JyjVdDbavkA', title: 'Impacted Wisdom Tooth | The Hidden Problem at the Back of Your Mouth' },
-  '/all-on-4-dental-implants': { id: 'mWMhRZo2E54', title: 'All-on-4 page video' },
+  '/all-on-4-dental-implants': { id: '33u-MrdHaVU', title: 'Full Mouth Rehabilitation in London | Transform Your Smile with Dr. Andreia Phipps' },
   '/dental-implants-cost': { id: 'Huq5WJ2grKc', title: 'Dental Implants Explained | A Premium Solution for Missing Teeth' },
 }
 

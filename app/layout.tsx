@@ -5,6 +5,7 @@ import '@/src/index.css'
 import '@/src/App.css'
 import '@/src/InnerPage.css'
 import '@/src/AllOnFour.css'
+import '@/src/HarleyStreetPrecision.css'
 import '@/src/ClinicLocations.css'
 import '@/src/BookingPage.css'
 

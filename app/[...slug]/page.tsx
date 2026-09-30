@@ -3,12 +3,14 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { ChevronRight } from 'lucide-react'
 import { contentPages, loadBlogIndex, loadPage, pageMetadata } from '@/lib/content'
-import { allOnFourContent, galleryContent, innerPageContent, localBookingHtml, singleToothContent } from '@/lib/html'
+import { allOnFourContent, faqAnswers, galleryContent, innerPageContent, localBookingHtml, singleToothContent } from '@/lib/html'
 import { Button } from '@/src/components/ui'
 import { InnerPage } from '@/src/components/InnerPage'
 import { GalleryPage } from '@/src/components/GalleryPage'
 import { AllOnFourPage } from '@/src/components/AllOnFourPage'
 import { SingleToothPage } from '@/src/components/SingleToothPage'
+import { MiniDentalImplantsPage } from '@/src/components/MiniDentalImplantsPage'
+import { FullArchImplantBridgePage } from '@/src/components/FullArchImplantBridgePage'
 import { PageSections } from '@/src/components/PageSections'
 
 export const dynamicParams = false
@@ -38,7 +40,9 @@ export default async function Page({ params }: { params: Promise<{ slug: string[
   const section = path.split('/').length > 2 ? sections[parent] : undefined
   const isAllOnFour = path === '/all-on-4-dental-implants'
   const isSingleTooth = path === '/single-tooth-implant'
-  const bespoke = isAllOnFour || isSingleTooth
+  const isMiniImplants = path === '/mini-dental-implants'
+  const isFullArchBridge = path === '/full-arch-implant-bridge'
+  const bespoke = isAllOnFour || isSingleTooth || isMiniImplants || isFullArchBridge
 
   return <main id="main" className="content-page">
     {page.schema?.map((entry, index) => <script key={index} type="application/ld+json" dangerouslySetInnerHTML={{ __html: entry }} />)}
@@ -47,9 +51,13 @@ export default async function Page({ params }: { params: Promise<{ slug: string[
       ? <AllOnFourPage content={allOnFourContent(html)} />
       : isSingleTooth
         ? <SingleToothPage content={singleToothContent(html)} />
-        : path === '/gallery'
-          ? <GalleryPage gallery={galleryContent(html)} />
-          : <InnerPage content={innerPageContent(html, path)} path={path} blog={blog} />}
+        : isMiniImplants
+          ? <MiniDentalImplantsPage />
+          : isFullArchBridge
+            ? <FullArchImplantBridgePage />
+            : path === '/gallery'
+              ? <GalleryPage gallery={galleryContent(html)} />
+              : <InnerPage content={innerPageContent(html, path, faqAnswers(page.schema))} path={path} blog={blog} />}
     {!bespoke && <>
       <PageSections path={path} />
       <section className="contact-band"><div className="container"><h2>Get in Touch</h2><Button light>Book consultation</Button></div></section>

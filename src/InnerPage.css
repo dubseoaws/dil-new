@@ -271,3 +271,37 @@
 .inner-page .inner-item>div>h3+div{font-size:27px}
 .inner-page .inner-grid:has(>.inner-item>div:first-child+div>h3)>.inner-item:not(:has(>div:first-child+div>h3))::before{display:none}
 }
+
+/* ---- FAQ accordions ---- */
+.inner-page .inner-faq-list{display:grid;gap:12px;margin:28px 0;max-width:900px}
+.inner-page .inner-faq{border:1px solid var(--line);border-radius:14px;background:#fff;transition:border-color .2s,box-shadow .2s}
+.inner-page .inner-faq[open]{border-color:#c9d6e8;box-shadow:0 14px 34px -22px #10244099}
+.inner-page .inner-faq>summary{display:flex;align-items:center;gap:18px;justify-content:space-between;padding:18px 22px;cursor:pointer;list-style:none;font-family:var(--serif);font-size:19px;line-height:1.35;color:var(--ink)}
+.inner-page .inner-faq>summary::-webkit-details-marker{display:none}
+.inner-page .inner-faq>summary::after{content:'';flex:none;width:10px;height:10px;border-right:2px solid var(--primary);border-bottom:2px solid var(--primary);transform:rotate(45deg) translate(-2px,-2px);transition:transform .25s}
+.inner-page .inner-faq[open]>summary::after{transform:rotate(-135deg) translate(-2px,-2px)}
+.inner-page .inner-faq>summary:hover{color:var(--primary)}
+.inner-page .inner-faq>p{margin:0;padding:0 22px 20px;color:var(--muted);font-size:16px;line-height:1.7}
+.inner-page .inner-faq-list>div{border:1px solid var(--line);border-radius:14px;padding:18px 22px;font-family:var(--serif);font-size:19px;color:var(--ink)}
+
+/* ---- Standalone map link reads as a control, not stray text. ---- */
+.inner-page .inner-band-content a[href*="google.com/maps"]:only-child{display:inline-flex;align-items:center;gap:10px;padding:11px 18px;border:1px solid var(--line);border-radius:6px;font-size:14px;font-weight:650;color:var(--primary);text-decoration:none;transition:background .2s,border-color .2s}
+.inner-page .inner-band-content a[href*="google.com/maps"]:only-child::after{content:'\2197'}
+.inner-page .inner-band-content a[href*="google.com/maps"]:only-child:hover{background:var(--surface);border-color:#c9d6e8}
+
+/* ---- Closing call-to-action band. ---- */
+.inner-page .inner-cta{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:44px 48px;text-align:center}
+.inner-page .inner-cta>h2{margin-top:0}
+.inner-page .inner-cta>p{max-width:640px;margin-left:auto;margin-right:auto}
+.inner-page .inner-cta-actions{display:flex;flex-wrap:wrap;gap:18px;align-items:center;justify-content:center;margin-top:24px}
+
+/* ---- Reserve space for gallery images so captions do not jump on load. ---- */
+.inner-page .inner-media-gallery figure>div{aspect-ratio:16/10;overflow:hidden;border-radius:14px;background:var(--surface)}
+.inner-page .inner-media-gallery figure>div img{height:100%;object-fit:cover}
+.inner-page .inner-media-gallery figcaption{padding-top:10px;font-size:13.5px;color:var(--muted)}
+
+@media(max-width:700px){
+.inner-page .inner-faq>summary{font-size:17px;padding:16px 18px}
+.inner-page .inner-faq>p{padding:0 18px 18px;font-size:15px}
+.inner-page .inner-cta{padding:28px 22px}
+}
